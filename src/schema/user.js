@@ -4,7 +4,7 @@ const userType = require('./catworksPersonal')
 const userDashbaordType = require('./catworksDashboard')
 const userAuthenticationType = require('./catworksAuthentication')
 // Sql Helper Function
-const sqlHelper = require('./../helpers/sql')
+const sqlHelper = require('../helpers/sql')
 // Dummy Data 
 
 
@@ -51,7 +51,7 @@ const RootQuery = new GraphQLObjectType({
         args: { userId: { type:  GraphQLInt }},
         resolve (parent, args, request) {
           //TODO: Error Handling
-          const userAuthenticationData = getSelectedThingFromTable('CatsWork_dashboard', `userId = ${args.userId}`).then(res => {
+          const userAuthenticationData = getSelectedThingFromTable('CatsWork_authentication', `userId = ${args.userId}`).then(res => {
             return res[0]
           })
           return userAuthenticationData

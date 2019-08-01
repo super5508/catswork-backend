@@ -1,6 +1,6 @@
 const graphql = require("graphql")
 const commonTypes = require('../enums/commonTypes')
-
+const userType = require('./catworksPersonal')
 const { 
   GraphQLEnumType,
   GraphQLObjectType,
@@ -53,6 +53,15 @@ const userDashboard = new GraphQLObjectType({
     },
     notes: {
       type: GraphQLString
+    }
+    userInformation: {
+      type: userType, 
+      resolve(parent,request) {
+        //TODO: Error Handling
+        const userData = getSelectedThingFromTable('CatsWork_personal', `userId = ${parent.userId}`).then(res => {
+          return res[0]
+        })
+        return userData
     }
   })
 })

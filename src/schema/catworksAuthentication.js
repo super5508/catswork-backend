@@ -10,7 +10,7 @@ const {
   GraphQLInt
 } = graphql
 
-const userDashboard = new GraphQLObjectType({
+const userAuthentication = new GraphQLObjectType({
   name: 'user_authentications',
   fields: () => ({
     id: {

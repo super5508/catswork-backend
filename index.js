@@ -57,7 +57,10 @@ app.use("/user", graphqlHTTP({
 }))
 
 //Authentication 
-
+app.use("/authentication", graphqlHTTP({
+  schema: userSchema, //TODO: Change it authentication once it is ready
+  graphiql: true,
+}))
 
 
 
