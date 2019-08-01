@@ -2,7 +2,7 @@
 const express = require('express')
 const app = express();
 const graphqlHTTP = require("express-graphql")
-const schema = require('./src/schema/index')
+const userSchema = require('./src/schema/user')
 const mysql = require('mysql');
 const config = require('./src/config.js')
 const morgan = require('morgan')
@@ -52,9 +52,14 @@ app.use(responseTime())
 
 // GraphQL setup
 app.use("/user", graphqlHTTP({
-  schema: schema,
+  schema: userSchema,
   graphiql: true,
 }))
+
+//Authentication 
+
+
+
 
 // Just the test api endpoint to test services and configuration 
 // TODO: remove it.
@@ -63,6 +68,7 @@ app.get('/test', async (req, res) => {
   console.log(`Result from Query:`,  resultFromQuery)
   res.status(200).json(resultFromQuery[0])
 });
+
 
 
 //Listen to specific post 
