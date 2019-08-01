@@ -26,23 +26,24 @@ const getEverythingFromTable =  (tableName) => {
     pool.getConnection((error, connection) => {
     if (error) return reject(error)
      const query = `SELECT * FROM ${tableName}`
-      connection.query(query, (error, response) => {
+      connection.query(query, (err, response) => {
       connection.destroy()
-      if (error) return reject(error)
+      if (err) return reject(err)
       return resolve(response)
       })
     })
   })
 }
 
+
 const getSelectedThingFromTable = (tableName, locationReference, locationReferenceValue) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
       const query = `SELECT * FROM ${tableName} WHERE ${locationReference} = ${locationReferenceValue}`
-      connection.query(query, (error, response) => {
+      connection.query(query, (err, response) => {
         connection.destroy()
-        if (error) return reject(error)
+        if (err) return reject(err)
         return resolve(response)
       })
     })
@@ -50,9 +51,24 @@ const getSelectedThingFromTable = (tableName, locationReference, locationReferen
 }
 
 //TODO: Create Multiple Reference function
+// Later
+
+
 
 // Delete SQL Queries 
-
+const deleteSelectedFieldFromSql = (tableName, toDeleteColumn, toDeleteValue) => {
+  return new Promise ((resolve, reject) => {
+    pool.getConnection((error, connection) => {
+      if (error) return reject(error)
+      const query = `DELETE FROM ${tableName} WHERE ${toDeleteColumn} = ${toDeleteValue}`
+      connection.query(query, (err, response) => {
+        connection.destroy()
+        if (err) return reject(err)
+        return resolve(response)
+      })
+    })
+  })
+}
 
 
 // Update SQL Queries 
@@ -61,9 +77,9 @@ const updateFieldInTable = (tableName, conditionParameter, updatedCondition, loc
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
       const query = `UPDATE ${tableName} SET ${conditionParameter} = ${updatedCondition} WHERE ${locationReference} = ${locationReferenceValue}`
-      connection.query(query, (error, response) => {
+      connection.query(query, (err, response) => {
         connection.destroy()
-        if (error) return reject(error)
+        if (err) return reject(err)
         return resolve(response)
       })
     })
@@ -74,7 +90,8 @@ const updateFieldInTable = (tableName, conditionParameter, updatedCondition, loc
 module.exports =  {
   getEverythingFromTable,
   getSelectedThingFromTable,
-  updateFieldInTable
+  updateFieldInTable,
+  deleteSelectedFieldFromSql
 }
 
 
