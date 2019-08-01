@@ -54,6 +54,7 @@ const userDashboard = new GraphQLObjectType({
     notes: {
       type: GraphQLString
     }
+  })
 })
 
 
