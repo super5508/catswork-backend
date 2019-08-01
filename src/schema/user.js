@@ -62,7 +62,7 @@ const RootQuery = new GraphQLObjectType({
 
 // Mutations from here
 const Mutations = new GraphQLObjectType({
-  namd: 'userRootMutation'
+  name: 'userRootMutation',
   fields: {
     EditInformationInDashboard: {
       type: userDashbaordType,
@@ -75,7 +75,7 @@ const Mutations = new GraphQLObjectType({
     // Edit User Dashboard information 
     // Add User Dashboard information
     // Edit user Personal infomration 
-    // Delete user personal information 
+    // Delete user Dashboard information 
     //Add user Information in 
   }
 })
