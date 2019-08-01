@@ -13,11 +13,12 @@ const sqlHelper = require('../helpers/sql')
 const { 
   GraphQLObjectType,
   GraphQLInt,
-  GraphQLSchema
+  GraphQLSchema,
+  GraphQLNonNull
  } = graphql
 
 //SQL DATA Operations here
-const { getSelectedThingFromTable } = sqlHelper
+const { getSelectedThingFromTable,  updateFieldInTable  } = sqlHelper
 
 
 // Root Query 
@@ -26,7 +27,7 @@ const RootQuery = new GraphQLObjectType({
   fields: {
       catWorksPersonal: {
           type: userType, 
-          args: { userId: { type:  GraphQLInt }},
+          args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
           resolve(parent, args, request){
             //TODO: Error Handling
             const userData = getSelectedThingFromTable('CatsWork_personal', `userId`,  `${args.userId}`).then(res => {
@@ -37,7 +38,7 @@ const RootQuery = new GraphQLObjectType({
       }, 
       catWorksDashboard: {
         type: userDashbaordType,
-        args: { userId: { type:  GraphQLInt }},
+        args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
         resolve (parent, args, request) {
           //TODO: Error Handling
           const userDashboardData = getSelectedThingFromTable('CatsWork_dashboard', `userId`, `${args.userId}`).then(res => {
@@ -48,7 +49,7 @@ const RootQuery = new GraphQLObjectType({
       },
       catWorksAuthentication: { // TODO: Verify if user authentication needs to be here
         type: userAuthenticationType,
-        args: { userId: { type:  GraphQLInt }},
+        args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
         resolve (parent, args, request) {
           //TODO: Error Handling
           const userAuthenticationData = getSelectedThingFromTable('CatsWork_authentication', `userId`, `${args.userId}`).then(res => {
@@ -66,15 +67,38 @@ const Mutations = new GraphQLObjectType({
   fields: {
     EditInformationInDashboard: {
       type: userDashbaordType,
-      args: { userId: {type: GraphQLInt}}, 
+      args: { 
+        userId: {
+          type: new GraphQLNonNull(GraphQLInt)
+        }, 
+        params: {
+          type: GraphQLObjectType
+        }
+      }, 
       resolve (parent, args, request) {
-        
+        const updateDashBoardInformation = updateFieldInTable(`CatsWork_dashboard`, args.params, userId, args.userId).then(res => {
+          return res[0]
+        })
       }
-    }
+    }, 
+    EditPersonalInformation: {
+      type: userType,
+      args: { 
+        userId: {
+          type: new GraphQLNonNull(GraphQLInt)
+        }, 
+        params: {
+          type: GraphQLObjectType
+        }
+      }, 
+      resolve (parent, args, request) {
+        const updateDashBoardInformation = updateFieldInTable(`CatsWork_personal`, args.params, userId, args.userId).then(res => {
+          return res[0]
+        })
+      }
+    },
     // Note: User Authentication in other module
-    // Edit User Dashboard information 
     // Add User Dashboard information
-    // Edit user Personal infomration 
     // Delete user Dashboard information 
     //Add user Information in 
   }
@@ -82,4 +106,5 @@ const Mutations = new GraphQLObjectType({
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
+  mutation: Mutations
 })

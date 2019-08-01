@@ -35,7 +35,6 @@ const getEverythingFromTable =  (tableName) => {
   })
 }
 
-
 const getSelectedThingFromTable = (tableName, locationReference, locationReferenceValue) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
@@ -50,10 +49,7 @@ const getSelectedThingFromTable = (tableName, locationReference, locationReferen
   })
 }
 
-//TODO: Create Multiple Reference function
-// Later
-
-// Inserting in SQL table
+// Inserting new records in SQL table
 const insertIntheTable = (tableName, fields, values) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
@@ -67,8 +63,6 @@ const insertIntheTable = (tableName, fields, values) => {
     })
   })
 }
-
-
 
 // Delete SQL Queries 
 const deleteSelectedFieldFromSql = (tableName, toDeleteColumn, toDeleteValue) => {
@@ -85,13 +79,13 @@ const deleteSelectedFieldFromSql = (tableName, toDeleteColumn, toDeleteValue) =>
   })
 }
 
-
 // Update SQL Queries 
-const updateFieldInTable = (tableName, conditionParameter, updatedCondition, locationReference, locationReferenceValue) => {
+const updateFieldInTable = (tableName, updatedQuery, locationReference, locationReferenceValue) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
-      const query = `UPDATE ${tableName} SET ${conditionParameter} = ${updatedCondition} WHERE ${locationReference} = ${locationReferenceValue}`
+      if (updatedQuery) updatedQuery = setValuesForMutation(updatedQuery)
+      const query = `UPDATE ${tableName} SET ${updatedQuery} ${locationReference} = ${locationReferenceValue}`
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -100,6 +94,38 @@ const updateFieldInTable = (tableName, conditionParameter, updatedCondition, loc
     })
   })
 }
+
+//TODO: Create Multiple Reference function or adding multiple values at once
+
+const readOnlyValues = [
+  "createdAt",
+  "updatedAt",
+  "userId"
+]
+
+
+// Clenaing object
+const setValuesForMutation = (valuePassed) => {
+  let newQuery = ""
+  if (typeof valuePassed === 'object') {
+    for (x in valuePassed) {
+      const key =  x.trim()
+      let value = null
+      if (typeof valuePassed[x] === "string") value = valuePassed[x].trim()
+      newQuery = newQuery + x + '=' + valuePassed[x] + ','
+    }
+  }
+  if (typeof valuePassed === "string") newQuery = valuePassed.trim()
+  console.log(`This is newQuery`, newQuery)
+  return newQuery
+}
+
+const cleanValues = (valuePassed) => {
+  //TODO: For object as well
+  if (typeof valuePassed === "string") newQuery = valuePassed.trim()
+  return valuePassed
+}
+
 
 
 module.exports =  {
