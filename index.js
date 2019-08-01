@@ -11,6 +11,7 @@ const fs = require('fs')
 const rfs = require("rotating-file-stream")
 const cors = require('cors')
 const helmet = require('helmet')
+const query = require('./src/helpers/sql')
 
 //Jwt setup
 const jwtConfig = require('./src/helpers/jwt')
@@ -19,7 +20,7 @@ const jwtConfig = require('./src/helpers/jwt')
 // Path of log directors
 const logDirectory = path.join(__dirname, "logs");
 const responseTime = require('response-time')
-const query = require('./src/helpers/sql')
+
 // Checking if path access and if not creating a path for logs
 fs.stat(logDirectory, (err, stats) => {
   if (err) {
