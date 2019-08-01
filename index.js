@@ -12,7 +12,7 @@ const rfs = require("rotating-file-stream")
 const cors = require('cors')
 const helmet = require('helmet')
 const query = require('./src/helpers/sql')
-
+const { getSelectedThingFromTable, getEverythingFromTable, updateFieldInTable} = query //TODO: Remove if not using for testing
 //Jwt setup
 const jwtConfig = require('./src/helpers/jwt')
 
@@ -67,7 +67,7 @@ app.use("/authentication", graphqlHTTP({
 // Just the test api endpoint to test services and configuration 
 // TODO: remove it.
 app.get('/test', async (req, res) => {
-  const resultFromQuery = await query(`CatsWork_dashboard`)
+  const resultFromQuery = await updateFieldInTable('CatsWork_personal', 'gradYear', 2018, 'userId', 1234)
   console.log(`Result from Query:`,  resultFromQuery)
   res.status(200).json(resultFromQuery[0])
 });

@@ -35,11 +35,11 @@ const getEverythingFromTable =  (tableName) => {
   })
 }
 
-const getSelectedThingFromTable = (tableName, condition) => {
+const getSelectedThingFromTable = (tableName, locationReference, locationReferenceValue) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
-      const query = `SELECT * FROM ${tableName} WHERE ${condition}`
+      const query = `SELECT * FROM ${tableName} WHERE ${locationReference} = ${locationReferenceValue}`
       connection.query(query, (error, response) => {
         connection.destroy()
         if (error) return reject(error)
@@ -49,17 +49,32 @@ const getSelectedThingFromTable = (tableName, condition) => {
   })
 }
 
+//TODO: Create Multiple Reference function
+
 // Delete SQL Queries 
 
 
 
 // Update SQL Queries 
-
+const updateFieldInTable = (tableName, conditionParameter, updatedCondition, locationReference, locationReferenceValue) => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((error, connection) => {
+      if (error) return reject(error)
+      const query = `UPDATE ${tableName} SET ${conditionParameter} = ${updatedCondition} WHERE ${locationReference} = ${locationReferenceValue}`
+      connection.query(query, (error, response) => {
+        connection.destroy()
+        if (error) return reject(error)
+        return resolve(response)
+      })
+    })
+  })
+}
 
 
 module.exports =  {
   getEverythingFromTable,
-  getSelectedThingFromTable
+  getSelectedThingFromTable,
+  updateFieldInTable
 }
 
 

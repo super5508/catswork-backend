@@ -12,7 +12,7 @@ const {
 } = graphql
 
 const sqlHelper = require('../helpers/sql')
-
+const { getSelectedThingFromTable } = sqlHelper
 //TODO: Create Relations in here
  const userPersonal = new GraphQLObjectType({
   name: 'user_personal', // Importance of Name here

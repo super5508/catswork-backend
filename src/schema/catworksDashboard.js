@@ -8,9 +8,9 @@ const {
   GraphQLID,
   GraphQLInt
 } = graphql
-
+const sqlHelper = require('../helpers/sql')
 const { industryType } =  commonTypes 
-
+const { getSelectedThingFromTable } = sqlHelper
 //TODO: Create Relations in here
 const userDashboard = new GraphQLObjectType({
   name: 'user_dashboard',
@@ -58,7 +58,7 @@ const userDashboard = new GraphQLObjectType({
       type: userType, 
       resolve(parent,request) {
         //TODO: Error Handling
-        const userData = getSelectedThingFromTable('CatsWork_personal', `userId = ${parent.userId}`).then(res => {
+        const userData = getSelectedThingFromTable('CatsWork_personal', `userId`, `${parent.userId}`).then(res => {
           return res[0]
         })
         return userData

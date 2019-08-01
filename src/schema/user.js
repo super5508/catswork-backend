@@ -29,7 +29,7 @@ const RootQuery = new GraphQLObjectType({
           args: { userId: { type:  GraphQLInt }},
           resolve(parent, args, request){
             //TODO: Error Handling
-            const userData = getSelectedThingFromTable('CatsWork_personal', `userId = ${args.userId}`).then(res => {
+            const userData = getSelectedThingFromTable('CatsWork_personal', `userId`,  `${args.userId}`).then(res => {
               return res[0]
             })
             return userData
@@ -40,7 +40,7 @@ const RootQuery = new GraphQLObjectType({
         args: { userId: { type:  GraphQLInt }},
         resolve (parent, args, request) {
           //TODO: Error Handling
-          const userDashboardData = getSelectedThingFromTable('CatsWork_dashboard', `userId = ${args.userId}`).then(res => {
+          const userDashboardData = getSelectedThingFromTable('CatsWork_dashboard', `userId`, `${args.userId}`).then(res => {
             return res[0]
           })
           return userDashboardData
@@ -51,7 +51,7 @@ const RootQuery = new GraphQLObjectType({
         args: { userId: { type:  GraphQLInt }},
         resolve (parent, args, request) {
           //TODO: Error Handling
-          const userAuthenticationData = getSelectedThingFromTable('CatsWork_authentication', `userId = ${args.userId}`).then(res => {
+          const userAuthenticationData = getSelectedThingFromTable('CatsWork_authentication', `userId`, `${args.userId}`).then(res => {
             return res[0]
           })
           return userAuthenticationData
