@@ -31,7 +31,7 @@ const userAuthentication = new GraphQLObjectType({
   })
 })
 
-module.exports = userDashboard
+module.exports = userAuthentication 
 
 
 // DROP TABLE IF EXISTS `CatsWork_authentication`;

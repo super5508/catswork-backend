@@ -22,7 +22,7 @@ const { getSelectedThingFromTable } = sqlHelper
 
 // Root Query 
 const RootQuery = new GraphQLObjectType({
-  name: "RootQueryType",
+  name: "userRootQueryType",
   fields: {
       catWorksPersonal: {
           type: userType, 
@@ -46,7 +46,7 @@ const RootQuery = new GraphQLObjectType({
           return userDashboardData
         }
       },
-      catWorksAuthentication: {
+      catWorksAuthentication: { // TODO: Verify if user authentication needs to be here
         type: userAuthenticationType,
         args: { userId: { type:  GraphQLInt }},
         resolve (parent, args, request) {
@@ -61,7 +61,14 @@ const RootQuery = new GraphQLObjectType({
 })
 
 // Mutations from here
-
+// const Mutations = new GraphQLObjectType({
+//   namd: 'userRootMutation'
+//   fields: {
+//     // Note: User Authentication in other module
+//     // Add User Personal Information
+//     // Edit boo
+//   }
+// })
 
 module.exports = new GraphQLSchema({
   query: RootQuery,

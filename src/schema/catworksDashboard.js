@@ -53,7 +53,7 @@ const userDashboard = new GraphQLObjectType({
     },
     notes: {
       type: GraphQLString
-    }
+    },
     userInformation: {
       type: userType, 
       resolve(parent,request) {
@@ -62,6 +62,7 @@ const userDashboard = new GraphQLObjectType({
           return res[0]
         })
         return userData
+      }
     }
   })
 })
