@@ -61,14 +61,24 @@ const RootQuery = new GraphQLObjectType({
 })
 
 // Mutations from here
-// const Mutations = new GraphQLObjectType({
-//   namd: 'userRootMutation'
-//   fields: {
-//     // Note: User Authentication in other module
-//     // Add User Personal Information
-//     // Edit boo
-//   }
-// })
+const Mutations = new GraphQLObjectType({
+  namd: 'userRootMutation'
+  fields: {
+    EditInformationInDashboard: {
+      type: userDashbaordType,
+      args: { userId: {type: GraphQLInt}}, 
+      resolve (parent, args, request) {
+        
+      }
+    }
+    // Note: User Authentication in other module
+    // Edit User Dashboard information 
+    // Add User Dashboard information
+    // Edit user Personal infomration 
+    // Delete user personal information 
+    //Add user Information in 
+  }
+})
 
 module.exports = new GraphQLSchema({
   query: RootQuery,

@@ -53,6 +53,21 @@ const getSelectedThingFromTable = (tableName, locationReference, locationReferen
 //TODO: Create Multiple Reference function
 // Later
 
+// Inserting in SQL table
+const insertIntheTable = (tableName, fields, values) => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((error, connection) => {
+      if (error) return reject(error)
+      const query = `INSERT INTO ${tableName} ${fields} VALUES ${value}`
+      connection.query(query, (err, response) => {
+        connection.destroy()
+        if (err) return reject(err)
+        return resolve(response)
+      })
+    })
+  })
+}
+
 
 
 // Delete SQL Queries 
@@ -93,9 +108,3 @@ module.exports =  {
   updateFieldInTable,
   deleteSelectedFieldFromSql
 }
-
-
-
-// SQL Queries note 
-// 1. Get everything from DB SELECT * FROM CatsWork_dashboard
-// 2. Get Something specific from the database SELECT * FROM CatsWork_dashboard WHERE userId = 1234

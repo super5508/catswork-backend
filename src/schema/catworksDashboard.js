@@ -69,25 +69,3 @@ const userDashboard = new GraphQLObjectType({
 
 
 module.exports = userDashboard 
-
-
-
-// DROP TABLE IF EXISTS `CatsWork_dashboard`;
-// CREATE TABLE `CatsWork_dashboard` (
-//   `id` int(11) NOT NULL AUTO_INCREMENT,
-//   `userId` int(11) NOT NULL,
-//   `firstName` varchar(255) DEFAULT NULL,
-//   `lastName` varchar(255) DEFAULT NULL,
-//   `company` varchar(255) DEFAULT NULL,
-//   `jobTitle` varchar(255) DEFAULT NULL,
-//   `industry` int(11) DEFAULT NULL,
-//   `phoneNumber` varchar(255) DEFAULT NULL,
-//   `location` varchar(255) DEFAULT NULL,
-//   `education` varchar(255) DEFAULT NULL,
-//   `CirculActivities` varchar(255) DEFAULT NULL,
-//   `website` varchar(255) DEFAULT NULL,
-//   `notes` varchar(255) DEFAULT NULL,
-//   `createdAt` timestamp(6) NOT NULL,
-//   `updatedAt` timestamp(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
-//   PRIMARY KEY (`id`)
-// ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
