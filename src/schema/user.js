@@ -31,10 +31,10 @@ const RootQuery = new GraphQLObjectType({
           args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
           resolve(parent, args, request){
             //TODO: Error Handling
-            const userData = getSelectedThingFromTable('CatsWork_personal', `userId`,  `${args.userId}`).then(res => {
+            return getSelectedThingFromTable('CatsWork_personal', `userId`,  `${args.userId}`).then(res => {
+              console.log(`Res 0`, res[0])
               return res[0]
             })
-            return userData
           }
       }, 
       catWorksDashboard: {

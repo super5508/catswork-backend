@@ -2,7 +2,6 @@ const graphql = require("graphql")
 const commonTypes = require('../enums/commonTypes')
 const userDashboard = require('./catworksDashboard')
 const { MonthType, industryType, GenderType} =  commonTypes 
-const { userType } = require('./../enums/userType')
 const { getSelectedThingFromTable } = require('../helpers/sql')
 
 
@@ -18,16 +17,42 @@ const {
  const userPersonalType = new GraphQLObjectType({
   name: 'user_personal',
   fields: () => ({
-    userType: {
-      type: userType
+    id: {
+      type: GraphQLInt
+    },
+    userId: {
+      type: GraphQLInt
+    },
+    gradMonth: {
+      type: MonthType
+    },
+    gradYear: {
+      type: GraphQLInt
+    },
+    gender: {
+      type: GenderType 
+    },
+    email: {
+      type: GraphQLString
+    }, 
+    major: {
+      type: GraphQLString
+    },
+    industryInterest: {
+      type: industryType
+    },
+    school: {
+      type: GraphQLString
+    },
+    degree: {
+      type: GraphQLString
     },
     userDashboard: {
       type: require('./catworksDashboard').userDashboardType, 
-      resolve(parent, args, request) {
-        const userData = getSelectedThingFromTable('CatsWork_dashboard', `userId = ${parent.userId}`).then(res => {
-          return res[0]
-        })
-        return userData
+      resolve: async (parent, args, request) => {
+        const userData = await getSelectedThingFromTable('CatsWork_dashboard', `userId = ${parent.userId}`)
+        console.log(`userData:`,userData)
+        return userData[0]
       }
     }
   })
