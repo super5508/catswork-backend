@@ -24,14 +24,9 @@ const RootQuery = new GraphQLObjectType({
           args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
           resolve: async (parent, args, request) => {
             //TODO: Error Handling
-            try {
             const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId`,  `${args.userId}`)
             // since there would only be a single user with a userId, hence we aren't using list here and hence we are passing the 0th element
             return getUserDataFromTable[0]
-            } catch (err) {
-              console.error(err)
-              throw new Error(err)
-            }
           }
       }, 
       catWorksDashboard: {
@@ -40,13 +35,8 @@ const RootQuery = new GraphQLObjectType({
         resolve: async (parent, args, request) => {
           //TODO: Error Handling
           // THis is a list, hence don't need to pass the 0th element
-          try {
             const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `userId`, `${args.userId}`)
             return userDashboardData
-          } catch (err) {
-            console.error(err)
-            throw new Error(err)
-          }
         }
       },
       catWorksAuthentication: { // TODO: Verify if user authentication needs to be here
@@ -54,13 +44,8 @@ const RootQuery = new GraphQLObjectType({
         args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
         resolve: async (parent, args, request) => {
           //TODO: Error Handling
-          try {
           const userAuthenticationData = await getSelectedThingFromTable('CatsWork_authentication', `userId`, `${args.userId}`)
           return userAuthenticationData[0]
-          } catch (err) {
-            console.error(err)
-            throw new Error(err)
-          }
         }
       }
   }

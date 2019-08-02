@@ -51,15 +51,8 @@ const {
     userDashboard: { // Since user can have multiple list of enteries, using list
       type: new GraphQLList(require('./catworksDashboard').userDashboardType), 
       resolve: async (parent, args, request) => {
-        try {
-        console.log(`Parent User Id:`, parent.userId)
         const userData = await getSelectedThingFromTable('CatsWork_dashboard', `userId`,  `${parent.userId}`)
-        console.log(`userData:`,userData)
         return userData
-        } catch (err) {
-          console.error(err)
-          throw new Error(err)
-        }
       }
     }
   })
