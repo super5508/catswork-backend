@@ -14,7 +14,8 @@ const {
   GraphQLObjectType,
   GraphQLInt,
   GraphQLSchema,
-  GraphQLNonNull
+  GraphQLNonNull,
+  GraphQLInputObjectType
  } = graphql
 
 //SQL DATA Operations here

@@ -108,7 +108,6 @@ const industryType = new GraphQLEnumType({
   }
 })
 
-
 const GenderType = new GraphQLEnumType({
   name: 'Gender',
   values: {
