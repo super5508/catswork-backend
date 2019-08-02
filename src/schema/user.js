@@ -5,22 +5,15 @@ const {userDashboardType, userDashboardInputType} = require('./catworksDashboard
 const userAuthenticationType = require('./catworksAuthentication')
 // Sql Helper Function
 const { getSelectedThingFromTable,  updateFieldInTable  } = require('../helpers/sql')
-// Dummy Data 
-
-
-// Getting all the data of the 
 
 const { 
   GraphQLObjectType,
   GraphQLInt,
   GraphQLSchema,
   GraphQLNonNull,
-  GraphQLInputObjectType
+  GraphQLInputObjectType,
+  GraphQLList
  } = graphql
-
-//SQL DATA Operations here
-
-
 
 // Root Query 
 const RootQuery = new GraphQLObjectType({
@@ -29,34 +22,45 @@ const RootQuery = new GraphQLObjectType({
       catWorksPersonal: {
           type: userPersonalType, 
           args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
-          resolve(parent, args, request){
+          resolve: async (parent, args, request) => {
             //TODO: Error Handling
-            return getSelectedThingFromTable('CatsWork_personal', `userId`,  `${args.userId}`).then(res => {
-              console.log(`Res 0`, res[0])
-              return res[0]
-            })
+            try {
+            const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId`,  `${args.userId}`)
+            // since there would only be a single user with a userId, hence we aren't using list here and hence we are passing the 0th element
+            return getUserDataFromTable[0]
+            } catch (err) {
+              console.error(err)
+              throw new Error(err)
+            }
           }
       }, 
       catWorksDashboard: {
         type: userDashboardType,
         args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
-        resolve (parent, args, request) {
+        resolve: async (parent, args, request) => {
           //TODO: Error Handling
-          const userDashboardData = getSelectedThingFromTable('CatsWork_dashboard', `userId`, `${args.userId}`).then(res => {
-            return res[0]
-          })
-          return userDashboardData
+          // THis is a list, hence don't need to pass the 0th element
+          try {
+            const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `userId`, `${args.userId}`)
+            return userDashboardData
+          } catch (err) {
+            console.error(err)
+            throw new Error(err)
+          }
         }
       },
       catWorksAuthentication: { // TODO: Verify if user authentication needs to be here
-        type: userAuthenticationType,
+        type: new GraphQLList(userAuthenticationType),
         args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
-        resolve (parent, args, request) {
+        resolve: async (parent, args, request) => {
           //TODO: Error Handling
-          const userAuthenticationData = getSelectedThingFromTable('CatsWork_authentication', `userId`, `${args.userId}`).then(res => {
-            return res[0]
-          })
-          return userAuthenticationData
+          try {
+          const userAuthenticationData = await getSelectedThingFromTable('CatsWork_authentication', `userId`, `${args.userId}`)
+          return userAuthenticationData[0]
+          } catch (err) {
+            console.error(err)
+            throw new Error(err)
+          }
         }
       }
   }
@@ -76,7 +80,7 @@ const Mutations = new GraphQLObjectType({
           type: userDashboardInputType
         }
       }, 
-      resolve (parent, args, request) {
+      resolve: async (parent, args, request) => {
         const updateDashBoardInformation = updateFieldInTable(`CatsWork_dashboard`, args.parameter, userId, args.userId).then(res => {
           return res[0]
         })
@@ -92,7 +96,7 @@ const Mutations = new GraphQLObjectType({
           type: userPersonalInputType
         }
       }, 
-      resolve (parent, args, request) {
+      resolve: async (parent, args, request) => {
         const updateDashBoardInformation = updateFieldInTable(`CatsWork_personal`, args.params, userId, args.userId).then(res => {
           return res[0]
         })

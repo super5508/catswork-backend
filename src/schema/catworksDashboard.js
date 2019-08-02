@@ -54,12 +54,11 @@ const userDashboardType = new GraphQLObjectType({
     }, 
     userInformation: {
       type: require('./catworksPersonal').userPersonalType, 
-      resolve(parent,request) {
+      resolve: async (parent, args, request) => {
         //TODO: Error Handling
-        const userData = getSelectedThingFromTable('CatsWork_personal', `userId`, `${parent.userId}`).then(res => {
-          return res[0]
-        })
-        return userData
+        console.log(`Parent User Id:`, parent[0].userId) //Since ID is going to be same everywhere
+        const userData = await getSelectedThingFromTable('CatsWork_personal', `userId`, `${parent[0].userId}`)
+        return userData[0]
       }
     }
   })
