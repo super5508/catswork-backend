@@ -18,7 +18,7 @@ const createrUser = async (email, password) => {
   console.log(`Generated Random Number:`, generateOtp)
   const generateUserId = await createRandomNumberNotInTable('CatsWork_authentication','userId', 7)
   const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication','email', email)
-  console.log(`Email Exsist:`,  checkIfEmailExsist )
+  console.log(`Email Exsist:`,  checkIfEmailExsist)
   if (checkIfEmailExsist[0]) {
     throw new Error(`Email Already exsist`)
   } 
@@ -32,8 +32,15 @@ const createrUser = async (email, password) => {
   console.log(`Insert in the table:`, insertIntheTable)
   //Genderate token
   const newPayload = {
-
+    email
   }
+  const getNewlyGeneratedAccessToken = await generateToken(payload, '3h', generateUserId)
+  console.log(`Newly Generated Access Token`,  getNewlyGeneratedAccessToken)
+  return {{email, userId}, getNewlyGeneratedAccessToken}
+}
+
+const signInUser = (email, password) => {
+  
 }
 
 module.exports = {
