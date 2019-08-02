@@ -12,7 +12,8 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLID,
-  GraphQLInt
+  GraphQLInt,
+  GraphQLInputObjectType
 } = graphql
 
 
@@ -99,7 +100,18 @@ const userDashboardType = new GraphQLObjectType({
   })
 })
 
+
+
+const userDashboardInputType =  new GraphQLInputObjectType({
+  name: 'userDashboadType', 
+  fields: {
+    userDashboard: {
+      type:userDashboardType
+    }
+  }
+})
+
 module.exports = {
   userType: userType,
-  userDashboardType: userDashboardType
+  userDashboardType: userDashboardType,
 }

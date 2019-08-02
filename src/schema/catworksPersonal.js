@@ -11,17 +11,18 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLID,
-  GraphQLInt
+  GraphQLInt,
+  GraphQLInputObjectType
 } = graphql
 
- const userPersonalTableType = new GraphQLObjectType({
+ const userPersonalType = new GraphQLObjectType({
   name: 'user_personal',
   fields: () => ({
     userType: {
       type: userType
     },
     userDashboard: {
-      type: require('./catworksDashboard'), 
+      type: require('./catworksDashboard').userDashboardType, 
       resolve(parent, args, request) {
         const userData = getSelectedThingFromTable('CatsWork_dashboard', `userId = ${parent.userId}`).then(res => {
           return res[0]
@@ -32,5 +33,43 @@ const {
   })
 })
 
+const userPersonalInputType =  new GraphQLInputObjectType({
+  name: 'userInputType',
+  fields: () => ({
+    id: {
+      type: GraphQLInt
+    },
+    userId: {
+      type: GraphQLInt
+    },
+    gradMonth: {
+      type: MonthType
+    },
+    gradYear: {
+      type: GraphQLInt
+    },
+    gender: {
+      type: GenderType 
+    },
+    email: {
+      type: GraphQLString
+    }, 
+    major: {
+      type: GraphQLString
+    },
+    industryInterest: {
+      type: industryType
+    },
+    school: {
+      type: GraphQLString
+    },
+    degree: {
+      type: GraphQLString
+    }
+  })
+})
 
-module.exports = userPersonalTableType
+module.exports = {
+  userPersonalType,
+  userPersonalInputType
+}

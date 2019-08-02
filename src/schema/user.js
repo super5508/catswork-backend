@@ -1,10 +1,10 @@
 const graphql = require("graphql")
 // GraphQL types
-const userType = require('./catworksPersonal')
-const userDashbaordType = require('./catworksDashboard')
+const {userPersonalType, userPersonalInputType }= require('./catworksPersonal')
+const {userDashboardType, userDashboardInputType} = require('./catworksDashboard')
 const userAuthenticationType = require('./catworksAuthentication')
 // Sql Helper Function
-const sqlHelper = require('../helpers/sql')
+const { getSelectedThingFromTable,  updateFieldInTable  } = require('../helpers/sql')
 // Dummy Data 
 
 
@@ -19,7 +19,7 @@ const {
  } = graphql
 
 //SQL DATA Operations here
-const { getSelectedThingFromTable,  updateFieldInTable  } = sqlHelper
+
 
 
 // Root Query 
@@ -27,7 +27,7 @@ const RootQuery = new GraphQLObjectType({
   name: "userRootQueryType",
   fields: {
       catWorksPersonal: {
-          type: userType, 
+          type: userPersonalType, 
           args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
           resolve(parent, args, request){
             //TODO: Error Handling
@@ -38,7 +38,7 @@ const RootQuery = new GraphQLObjectType({
           }
       }, 
       catWorksDashboard: {
-        type: userDashbaordType,
+        type: userDashboardType,
         args: { userId: { type: new GraphQLNonNull(GraphQLInt) }},
         resolve (parent, args, request) {
           //TODO: Error Handling
@@ -67,29 +67,29 @@ const Mutations = new GraphQLObjectType({
   name: 'userRootMutation',
   fields: {
     EditInformationInDashboard: {
-      type: userDashbaordType,
+      type: userDashboardType,
       args: { 
         userId: {
           type: new GraphQLNonNull(GraphQLInt)
         }, 
-        params: {
-          type: GraphQLObjectType
+        parameter: {
+          type: userDashboardInputType
         }
       }, 
       resolve (parent, args, request) {
-        const updateDashBoardInformation = updateFieldInTable(`CatsWork_dashboard`, args.params, userId, args.userId).then(res => {
+        const updateDashBoardInformation = updateFieldInTable(`CatsWork_dashboard`, args.parameter, userId, args.userId).then(res => {
           return res[0]
         })
       }
     }, 
     EditPersonalInformation: {
-      type: userType,
+      type: userPersonalType,
       args: { 
         userId: {
           type: new GraphQLNonNull(GraphQLInt)
         }, 
         params: {
-          type: GraphQLObjectType
+          type: userPersonalInputType
         }
       }, 
       resolve (parent, args, request) {

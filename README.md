@@ -16,3 +16,5 @@ npm install
 
 ## Errors 1067
 [SFO ANSWER TO FIX IT](https://stackoverflow.com/questions/36882149/error-1067-42000-invalid-default-value-for-created-at)
+
+[GraphQL Input type Error](https://stackoverflow.com/questions/45806368/graphql-error-field-type-must-be-input-type-but-got?rq=1)
