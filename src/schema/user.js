@@ -4,15 +4,16 @@ const {userPersonalType, userPersonalInputType }= require('./catworksPersonal')
 const {userDashboardType, userDashboardInputType} = require('./catworksDashboard')
 const userAuthenticationType = require('./catworksAuthentication')
 // Sql Helper Function
-const { getSelectedThingFromTable,  updateFieldInTable  } = require('../helpers/sql')
+const { getSelectedThingFromTable,  updateFieldInTable,  deleteSelectedRow} = require('../helpers/sql')
 
 const { 
   GraphQLObjectType,
   GraphQLInt,
   GraphQLSchema,
-  GraphQLNonNull,
   GraphQLInputObjectType,
-  GraphQLList
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLBoolean
  } = graphql
 
 // Root Query 
@@ -58,7 +59,7 @@ const Mutations = new GraphQLObjectType({
     EditInformationInDashboard: {
       type: userDashboardType,
       args: { 
-        userId: {
+        id: {
           type: new GraphQLNonNull(GraphQLInt)
         }, 
         parameter: {
@@ -66,9 +67,10 @@ const Mutations = new GraphQLObjectType({
         }
       }, 
       resolve: async (parent, args, request) => {
-        const updateDashBoardInformation = updateFieldInTable(`CatsWork_dashboard`, args.parameter, `userId`, args.userId).then(res => {
-          return res[0]
-        })
+        // Using ID here instead of userId since Id is going to be unique
+        // TODO: Ask is passing userId in params here required -> Should remove?
+        const updateDashBoardInformation = await updateFieldInTable(`CatsWork_dashboard`, args.parameter, `id`, args.id)
+        return  updateDashBoardInformation[0]
       }
     }, 
     EditPersonalInformation: {
@@ -85,7 +87,28 @@ const Mutations = new GraphQLObjectType({
         const updateDashBoardInformation =  await updateFieldInTable(`CatsWork_personal`, args.parameter, `userId`, args.userId)
         return updateDashBoardInformation [0]
       }
-    },
+    }, 
+    DeleteEntireRowFromDashboard: { //returns true if the query is deleted
+      type: GraphQLBoolean,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLInt)
+        }, 
+        userId: {
+          type: new GraphQLNonNull(GraphQLInt)
+        }
+      }, 
+      resolve: async (parent, args, request) => {
+        //Create function to delete entire row from the dashboard
+        try {
+        const deleteSelectedRecord = await deleteSelectedRow(`CatsWork_dashboard`, `id`, args.id)
+        return true
+        } catch (err) {
+          console.error(err)
+          return false
+        }
+      }
+    }
     // Note: User Authentication in other module
     // Add User Dashboard information
     // Delete user Dashboard information 

@@ -66,11 +66,11 @@ const insertIntheTable = (tableName, fields, values) => {
 }
 
 // Delete SQL Queries 
-const deleteSelectedFieldFromSql = (tableName, toDeleteColumn, toDeleteValue) => {
+const deleteSelectedRow = (tableName, toDeleteCondition, toDeleteValue) => {
   return new Promise ((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
-      const query = `DELETE FROM ${tableName} WHERE ${toDeleteColumn} = ${toDeleteValue}`
+      const query = `DELETE FROM ${tableName} WHERE ${toDeleteCondition} = ${toDeleteValue}`
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -118,9 +118,11 @@ const setValuesForMutation = (valuePassed) => {
     }
   }
   if (typeof valuePassed === "string") newQuery = valuePassed.trim()
-  console.log(`This is newQuery`, newQuery)
+
   return newQuery
 }
+
+
 
 const cleanValues = (valuePassed) => {
   //TODO: For object as well
@@ -134,5 +136,5 @@ module.exports =  {
   getEverythingFromTable,
   getSelectedThingFromTable,
   updateFieldInTable,
-  deleteSelectedFieldFromSql
+  deleteSelectedRow
 }

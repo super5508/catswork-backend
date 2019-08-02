@@ -6,7 +6,8 @@ const {
   GraphQLString,
   GraphQLID,
   GraphQLInt,
-  GraphQLInputObjectType
+  GraphQLInputObjectType,
+  GraphQLNonNull
 } = graphql
 const { getSelectedThingFromTable } = require('../helpers/sql')
 
@@ -72,7 +73,7 @@ const userDashboardInputType =  new GraphQLInputObjectType({
       type: GraphQLInt
     },
     userId: {
-      type: GraphQLInt
+      type: new GraphQLNonNull(GraphQLInt)
     },
     firstName: {
       type: GraphQLString
