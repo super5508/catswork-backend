@@ -51,11 +51,13 @@ const getSelectedThingFromTable = (tableName, locationReference, locationReferen
 }
 
 // Inserting new records in SQL table
-const insertIntheTable = (tableName, fields, values) => {
+const insertIntheTable = (tableName, insertionValues) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
-      const query = `INSERT INTO ${tableName} ${fields} VALUES ${value}`
+      if (insertionValues) insertionValues = setValuesForInsertion(insertionValues)
+      console.log(`This is insertion Values:`, insertionValues)
+      const query = `INSERT INTO ${tableName} `
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -87,7 +89,7 @@ const updateFieldInTable = (tableName, updatedQuery, locationReference, location
       console.log(`Queries Value:`, tableName, updatedQuery, locationReference, locationReferenceValue)
       if (error) return reject(error)
       if (updatedQuery) updatedQuery = setValuesForMutation(updatedQuery)
-      const query = `UPDATE ${tableName} SET ${updatedQuery} ${locationReference} = ${locationReferenceValue}`
+      const query = `UPDATE ${tableName} SET ${updatedQuery} + 'WHERE' ${locationReference} = ${locationReferenceValue}`
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -97,28 +99,47 @@ const updateFieldInTable = (tableName, updatedQuery, locationReference, location
   })
 }
 
+
+//Check if the entry is unqiue or not in sql 
+
+
+
+
 //TODO: Create Multiple Reference function or adding multiple values at once
 
-const readOnlyValues = [
-  "createdAt",
-  "updatedAt",
-  "userId"
-]
+const readOnlyValues = {
+  createdAt: true,
+  updatedAt: true,
+  userId: true
+}
+// clean object for insertion 
+const setValuesForInsertion = (valuePassed) => {
+  let keys = null
+  let values = null 
+  for (x in valuePassed) {
+    const key = x.trim()
+    keys = keys + x + ','
+    values = values + valuePassed[x] + ','
+  }
+  return `(` + keys + ')' + 'VALUES' + '(' + values + ")"
+}
 
 
-// Clenaing object
+
+// Clenaing object for update
 const setValuesForMutation = (valuePassed) => {
   let newQuery = ""
   if (typeof valuePassed === 'object') {
     for (x in valuePassed) {
       const key =  x.trim()
-      let value = null
-      if (typeof valuePassed[x] === "string") value = valuePassed[x].trim()
-      newQuery = newQuery + x + '=' + valuePassed[x] + ','
+      if (!readOnlyValues[key]) {
+        let value = null
+        if (typeof valuePassed[x] === "string") value = valuePassed[x].trim()
+        newQuery = newQuery + x + '=' + valuePassed[x] + ','
+      }
     }
   }
   if (typeof valuePassed === "string") newQuery = valuePassed.trim()
-
   return newQuery
 }
 

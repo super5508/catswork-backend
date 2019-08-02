@@ -51,10 +51,13 @@ app.use(cors());
 app.use(responseTime())
 
 // GraphQL setup
-app.use("/user", graphqlHTTP({
+app.use("/user", graphqlHTTP( req => ({
   schema: userSchema,
   graphiql: true,
-}))
+  context: {
+    user: req.user
+  }
+})))
 
 //Authentication 
 app.use("/authentication", graphqlHTTP({
