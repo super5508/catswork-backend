@@ -66,7 +66,7 @@ const Mutations = new GraphQLObjectType({
         }
       }, 
       resolve: async (parent, args, request) => {
-        const updateDashBoardInformation = updateFieldInTable(`CatsWork_dashboard`, args.parameter, userId, args.userId).then(res => {
+        const updateDashBoardInformation = updateFieldInTable(`CatsWork_dashboard`, args.parameter, `userId`, args.userId).then(res => {
           return res[0]
         })
       }
@@ -77,14 +77,13 @@ const Mutations = new GraphQLObjectType({
         userId: {
           type: new GraphQLNonNull(GraphQLInt)
         }, 
-        params: {
+        parameter: {
           type: userPersonalInputType
         }
       }, 
       resolve: async (parent, args, request) => {
-        const updateDashBoardInformation = updateFieldInTable(`CatsWork_personal`, args.params, userId, args.userId).then(res => {
-          return res[0]
-        })
+        const updateDashBoardInformation =  await updateFieldInTable(`CatsWork_personal`, args.parameter, `userId`, args.userId)
+        return updateDashBoardInformation [0]
       }
     },
     // Note: User Authentication in other module
