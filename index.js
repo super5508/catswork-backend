@@ -12,7 +12,6 @@ const rfs = require("rotating-file-stream")
 const cors = require('cors')
 const helmet = require('helmet')
 const query = require('./src/helpers/sql')
-const { getSelectedThingFromTable, getEverythingFromTable, updateFieldInTable, deleteSelectedFieldFromSql} = query //TODO: Remove if not using for testing
 //Jwt setup
 const jwtConfig = require('./src/helpers/jwt')
 const tempRoutes = require('./src/tempRoutes/auth')
@@ -57,9 +56,6 @@ app.use(responseTime())
 app.use("/user", graphqlHTTP( req => ({
   schema: userSchema,
   graphiql: true,
-  context: {
-    user: req.user
-  }
 })))
 
 //Authentication 

@@ -88,7 +88,7 @@ const userOtpVerification = async (email, userOtp) => {
       const payload = {
         isVerified: 1
       }
-      const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', payload, 'email', `"${email}"`)
+      const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', payload, `email = "${email}"`)
       const getNewlyGeneratedAccessToken = await generateToken({userId})
       return getNewlyGeneratedAccessToken
     } else {

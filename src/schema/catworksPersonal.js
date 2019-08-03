@@ -12,7 +12,8 @@ const {
   GraphQLID,
   GraphQLInt,
   GraphQLInputObjectType,
-  GraphQLList
+  GraphQLList, 
+  GraphQLNonNull
 } = graphql
 
  const userPersonalType = new GraphQLObjectType({
@@ -24,6 +25,9 @@ const {
     userId: {
       type: GraphQLInt
     },
+    name: {
+      type: GraphQLString
+    },
     gradMonth: {
       type: MonthType
     },
@@ -33,9 +37,6 @@ const {
     gender: {
       type: GenderType 
     },
-    email: {
-      type: GraphQLString
-    }, 
     major: {
       type: GraphQLString
     },
@@ -70,8 +71,8 @@ const userPersonalInputType =  new GraphQLInputObjectType({
     id: {
       type: GraphQLInt
     },
-    userId: {
-      type: GraphQLInt
+    name: {
+      type: GraphQLString
     },
     gradMonth: {
       type: MonthType
@@ -82,9 +83,39 @@ const userPersonalInputType =  new GraphQLInputObjectType({
     gender: {
       type: GenderType 
     },
-    email: {
+    major: {
       type: GraphQLString
-    }, 
+    },
+    industryInterest: {
+      type: industryType
+    },
+    school: {
+      type: GraphQLString
+    },
+    degree: {
+      type: GraphQLString
+    }
+  })
+})
+
+const userCreationlInputType =  new GraphQLInputObjectType({
+  name: 'userCreationInputType',
+  fields: () => ({
+    id: {
+      type: GraphQLInt
+    },
+    gradMonth: {
+      type: MonthType
+    },
+    name: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    gradYear: {
+      type: GraphQLInt
+    },
+    gender: {
+      type: GenderType 
+    },
     major: {
       type: GraphQLString
     },
@@ -102,5 +133,6 @@ const userPersonalInputType =  new GraphQLInputObjectType({
 
 module.exports = {
   userPersonalType,
-  userPersonalInputType
+  userPersonalInputType,
+  userCreationlInputType 
 }

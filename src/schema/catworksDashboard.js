@@ -78,9 +78,6 @@ const userDashboardInputType =  new GraphQLInputObjectType({
     id: {
       type: GraphQLInt
     },
-    userId: {
-      type: new GraphQLNonNull(GraphQLInt)
-    },
     firstName: {
       type: GraphQLString
     },
