@@ -57,7 +57,7 @@ const insertIntheTable = (tableName, insertionValues) => {
       if (error) return reject(error)
       if (insertionValues) insertionValues = setValuesForInsertion(insertionValues)
       console.log(`This is insertion Values:`, insertionValues)
-      const query = `INSERT INTO ${tableName} `
+      const query = `INSERT INTO ${tableName} ${insertionValues}`
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -114,14 +114,15 @@ const readOnlyValues = {
 }
 // clean object for insertion 
 const setValuesForInsertion = (valuePassed) => {
-  let keys = null
-  let values = null 
+  let keys = ''
+  let values = ''
   for (x in valuePassed) {
     const key = x.trim()
-    keys = keys + x + ','
-    values = values + valuePassed[x] + ','
+    if (typeof valuePassed[x] === 'string')  values = values + `'${valuePassed[x]}'` + ','
+    else  values = values + valuePassed[x] + ','
+    keys = keys + key + ','
   }
-  return `(` + keys + ')' + 'VALUES' + '(' + values + ")"
+  return `(` + keys.slice(0, -1) + ')' + 'VALUES' + '(' + values.slice(0, -1) + ")"
 }
 
 
@@ -157,5 +158,6 @@ module.exports =  {
   getEverythingFromTable,
   getSelectedThingFromTable,
   updateFieldInTable,
-  deleteSelectedRow
+  deleteSelectedRow,
+  insertIntheTable
 }

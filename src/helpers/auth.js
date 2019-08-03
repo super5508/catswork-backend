@@ -9,15 +9,15 @@ const createRandomNumberNotInTable = async (tableName, location, randomNumberLen
     const checkIfNumberExsist = await getSelectedThingFromTable(tableName, location, generateNumber)
     console.log(`This is check if number exsist value`,  checkIfNumberExsist)
     if (checkIfNumberExsist[0]) return createRandomNumberNotInTable(tableName, location, randomNumberLength)
-    else if (!checkIfNumberExsist[0]) return checkIfNumberExsist 
+    else if (!checkIfNumberExsist[0]) return generateNumber
 }
 
-const createrUser = async (email, password) => {
+const createrUser = async (email, password, expiryTime) => {
   const hashedPassword =  bcrypt.hashSync(password)
   const generateOtp = await createRandomNumberNotInTable('CatsWork_authentication', 'generated_otp', 5)
   console.log(`Generated Random Number:`, generateOtp)
   const generateUserId = await createRandomNumberNotInTable('CatsWork_authentication','userId', 7)
-  const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication','email', email)
+  const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
   console.log(`Email Exsist:`,  checkIfEmailExsist)
   if (checkIfEmailExsist[0]) {
     throw new Error(`Email Already exsist`)
@@ -25,23 +25,25 @@ const createrUser = async (email, password) => {
   const payload = {
     generated_otp: generateOtp,
     userId: generateUserId, 
-    password: password, 
+    password: hashedPassword, 
     email: email
   }
-  const insertIntheTable = await insertIntheTable('CatsWork_authentication', payload)
-  console.log(`Insert in the table:`, insertIntheTable)
+  const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
+  console.log(`Insert in the table:`, insertNewUserInTable)
   //Genderate token
   const newPayload = {
-    email
+    userId
   }
-  const getNewlyGeneratedAccessToken = await generateToken(payload, '3h', generateUserId)
+  const getNewlyGeneratedAccessToken = await generateToken(payload, expiryTime)
   console.log(`Newly Generated Access Token`,  getNewlyGeneratedAccessToken)
-  return {{email, userId}, getNewlyGeneratedAccessToken}
+  return getNewlyGeneratedAccessToken
 }
 
-const signInUser = (email, password) => {
+const signInUser = (email, password, token) => {
   
 }
+
+
 
 module.exports = {
   createrUser

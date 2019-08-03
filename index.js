@@ -15,11 +15,14 @@ const query = require('./src/helpers/sql')
 const { getSelectedThingFromTable, getEverythingFromTable, updateFieldInTable, deleteSelectedFieldFromSql} = query //TODO: Remove if not using for testing
 //Jwt setup
 const jwtConfig = require('./src/helpers/jwt')
-
-
+const tempRoutes = require('./src/tempRoutes/auth')
+const bodyParser = require('body-parser')
 // Path of log directors
 const logDirectory = path.join(__dirname, "logs");
 const responseTime = require('response-time')
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Checking if path access and if not creating a path for logs
 fs.stat(logDirectory, (err, stats) => {
@@ -65,6 +68,7 @@ app.use("/authentication", graphqlHTTP({
   graphiql: true,
 }))
 
+app.use('/auth', tempRoutes)
 
 
 // Just the test api endpoint to test services and configuration 
