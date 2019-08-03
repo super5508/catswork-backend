@@ -48,6 +48,12 @@ const {
     degree: {
       type: GraphQLString
     },
+    createdAt: {
+      type: GraphQLString
+    },
+    updatedAt: {
+      type: GraphQLString
+    },
     userDashboard: { // Since user can have multiple list of enteries, using list
       type: new GraphQLList(require('./catworksDashboard').userDashboardType), 
       resolve: async (parent, args, request) => {

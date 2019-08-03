@@ -116,12 +116,15 @@ const readOnlyValues = {
 const setValuesForInsertion = (valuePassed) => {
   let keys = ''
   let values = ''
+  valuePassed.createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  valuePassed.updatedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
   for (x in valuePassed) {
     const key = x.trim()
     if (typeof valuePassed[x] === 'string')  values = values + `'${valuePassed[x]}'` + ','
     else  values = values + valuePassed[x] + ','
     keys = keys + key + ','
   }
+  const updatedAt = Date.now()
   return `(` + keys.slice(0, -1) + ')' + 'VALUES' + '(' + values.slice(0, -1) + ")"
 }
 

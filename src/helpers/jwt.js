@@ -2,6 +2,11 @@
 const jwt = require('jsonwebtoken')
 const config = require('../config')
 
+const {
+  JWT_SECRET, 
+  JWT_ISSUER
+ } = config
+ 
 const generateToken = ( payload, expiresIn) => {
    // Payload is expected to be a plain object
    // Payload should contain user Id

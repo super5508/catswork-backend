@@ -32,7 +32,7 @@ const createrUser = async (email, password, expiryTime) => {
   console.log(`Insert in the table:`, insertNewUserInTable)
   //Genderate token
   const newPayload = {
-    userId
+    userId:  generateUserId 
   }
   const getNewlyGeneratedAccessToken = await generateToken(payload, expiryTime)
   console.log(`Newly Generated Access Token`,  getNewlyGeneratedAccessToken)

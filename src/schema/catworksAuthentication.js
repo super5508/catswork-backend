@@ -28,6 +28,12 @@ const userAuthentication = new GraphQLObjectType({
     isVerified: {
       type: GraphQLInt
     },
+    createdAt: {
+      type: GraphQLString
+    },
+    updatedAt: {
+      type: GraphQLString
+    },
     userInformation: {
       type: require('./catworksPersonal').userPersonalType, 
       resolve: async (parent, args, request) => {

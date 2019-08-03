@@ -53,6 +53,12 @@ const userDashboardType = new GraphQLObjectType({
     notes: {
       type: GraphQLString
     }, 
+    createdAt: {
+      type: GraphQLString
+    },
+    updatedAt: {
+      type: GraphQLString
+    },
     userInformation: {
       type: require('./catworksPersonal').userPersonalType, 
       resolve: async (parent, args, request) => {
@@ -108,6 +114,12 @@ const userDashboardInputType =  new GraphQLInputObjectType({
     notes: {
       type: GraphQLString
     },
+    createdAt: {
+      type: GraphQLString
+    },
+    updatedAt: {
+      type: GraphQLString
+    }
   })
 })
 
