@@ -8,6 +8,7 @@ const {
   JWT_SESSION_DURATION
  } = config
 
+ console.log(JWT_SESSION_DURATION)
 const generateToken = ( payload) => {
    // Payload is expected to be a plain object
    // Payload should contain user Id

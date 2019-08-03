@@ -35,10 +35,7 @@ const createrUser = async (email, password) => {
   const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
   console.log(`Insert in the table:`, insertNewUserInTable)
   //Genderate token
-  const newPayload = {
-    userId:  generateUserId 
-  }
-  const getNewlyGeneratedAccessToken = await generateToken(payload)
+  const getNewlyGeneratedAccessToken = await generateToken({userId})
   console.log(`Newly Generated Access Token`,  getNewlyGeneratedAccessToken)
   return getNewlyGeneratedAccessToken
 }
@@ -46,14 +43,14 @@ const createrUser = async (email, password) => {
 const signInUser = async (email, passwordEntered, token) => {
   //load password keeping email as key 
   const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
-  console.log(`Data Associated with email:`, getDataAssociatedwithEmail)
+  console.log(`Data Associated with email:`, getDataAssociatedwithEmail[0].userId)
   if (!getDataAssociatedwithEmail) {
     throw new Error({
       code: 401,
       message: `Email does not exsist`
     })
-  const { userId, password } =  getDataAssociatedwithEmail[0].data
-  console.log( `This is userId & password:`, userId, password)
+  }
+    const { userId, password } =  getDataAssociatedwithEmail[0]
 
     // compare password 
     const doesPasswordMatch = bcrypt.compareSync(passwordEntered, password)
@@ -64,8 +61,8 @@ const signInUser = async (email, passwordEntered, token) => {
       }) 
     }
 
-  }
-  const getNewlyGeneratedAccessToken = await generateToken(payload)
+  
+  const getNewlyGeneratedAccessToken = await generateToken({userId})
   console.log(`Newly Generated Access Token`,  getNewlyGeneratedAccessToken)
   return getNewlyGeneratedAccessToken
   //Generate token
@@ -74,6 +71,7 @@ const signInUser = async (email, passwordEntered, token) => {
 
 
 module.exports = {
-  createrUser
+  createrUser,
+  signInUser
 }
 
