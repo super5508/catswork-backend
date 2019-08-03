@@ -110,7 +110,7 @@ const verifyUser = async (req, res, next) => {
         // Verify token
         const tokenVerficiation = await verifyToken(bearerToken)
         console.log(`This is token Verfication Response:`, tokenVerficiation)
-        req.headers.userId =  tokenVerficiation 
+        req.headers.userId =  tokenVerficiation.userId
         next();
       } catch (error) {
         throw new Error({

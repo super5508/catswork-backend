@@ -19,9 +19,8 @@ const bodyParser = require('body-parser')
 // Path of log directors
 const logDirectory = path.join(__dirname, "logs");
 const responseTime = require('response-time')
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// verifyUser 
+const {verifyUser} = require('./src/helpers/auth')
 
 // Checking if path access and if not creating a path for logs
 fs.stat(logDirectory, (err, stats) => {
@@ -42,30 +41,25 @@ const stream = rfs("file.log", {
   path: logDirectory 
 })
 
+// Setting up middlewares
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("combined", { stream: stream }))
 app.use(helmet())
-
-
 // Setting cors 
 app.use(cors());
 
 //For tracking responsive time (in headers)
 app.use(responseTime())
+app.use('/auth', tempRoutes)
+app.use(verifyUser)
 
 // GraphQL setup
-app.use("/user", graphqlHTTP( req => ({
-  schema: userSchema,
-  graphiql: true,
-})))
-
-//Authentication 
-app.use("/authentication", graphqlHTTP({
+app.use("/user", (req, res) => graphqlHTTP({
   schema: userSchema, //TODO: Change it authentication once it is ready
   graphiql: true,
-}))
-
-app.use('/auth', tempRoutes)
-
+  context: req
+})(req, res)) 
 
 // Just the test api endpoint to test services and configuration 
 // TODO: remove it.

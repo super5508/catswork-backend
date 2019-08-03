@@ -25,9 +25,6 @@ const {
     userId: {
       type: GraphQLInt
     },
-    name: {
-      type: GraphQLString
-    },
     gradMonth: {
       type: MonthType
     },

@@ -22,7 +22,7 @@ const RootQuery = new GraphQLObjectType({
   fields: {
       catWorksPersonal: {
           type: userPersonalType, 
-          resolve: async (parent, args, request) => {
+          resolve: async (parent, args, req) => {
             const userId = req.headers.userId
             //TODO: Error Handling
             const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId`,  `${userId}`)
@@ -31,8 +31,8 @@ const RootQuery = new GraphQLObjectType({
           }
       }, 
       catWorksDashboard: {
-        type: userDashboardType,
-        resolve: async (parent, args, request) => {
+        type:  new GraphQLList(userDashboardType),
+        resolve: async (parent, args, req) => {
           const userId = req.headers.userId
           // THis is a list, hence don't need to pass the 0th element
           const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `userId`, `${userId}`)
@@ -40,15 +40,15 @@ const RootQuery = new GraphQLObjectType({
         }
       },
       catWorksAuthentication: { // TODO: Verify if user authentication needs to be here
-        type: new GraphQLList(userAuthenticationType),
-        resolve: async (parent, args, request) => {
+        type: userAuthenticationType,
+        resolve: async (parent, args, req) => {
           const userId = req.headers.userId
           const userAuthenticationData = await getSelectedThingFromTable('CatsWork_authentication', `userId`, `${userId}`)
           return userAuthenticationData[0]
         }
       }
-  }
-})
+    }
+  })
 
 // Mutations from here
 const Mutations = new GraphQLObjectType({
@@ -64,7 +64,8 @@ const Mutations = new GraphQLObjectType({
           type: userDashboardInputType
         }
       }, 
-      resolve: async (parent, args, request) => {
+      resolve: async (parent, args, req) => {
+        console.log(req.headers.userId)
         args.parameter.userId = req.headers.userId
         const updateDashBoardInformation = await updateFieldInTable(`CatsWork_dashboard`, args.parameter, `id = ${args.id} AND userId = ${req.headers.userId}`)
         return  updateDashBoardInformation[0]
@@ -77,7 +78,7 @@ const Mutations = new GraphQLObjectType({
           type: userPersonalInputType
         }
       }, 
-      resolve: async (parent, args, request) => {
+      resolve: async (parent, args, req) => {
         args.parameter.userId = req.headers.userId
         const updateDashBoardInformation =  await updateFieldInTable(`CatsWork_personal`, args.parameter, `userId = ${args.userId}`)
         return updateDashBoardInformation [0]
@@ -90,7 +91,7 @@ const Mutations = new GraphQLObjectType({
           type: new GraphQLNonNull(GraphQLInt)
         }
       },
-      resolve: async (parent, args, request) => {
+      resolve: async (parent, args, req) => {
         //Create function to delete entire row from the dashboard
         try {
         const deleteSelectedRecord = await deleteSelectedRow(`CatsWork_dashboard`, `id`, args.id)
