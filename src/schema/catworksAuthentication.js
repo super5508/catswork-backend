@@ -8,7 +8,8 @@ const {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
-  GraphQLNonNull
+  GraphQLNonNull, 
+  GraphQLInputObjectType
 } = graphql
 
 const userAuthenticationType = new GraphQLObjectType({
@@ -54,7 +55,7 @@ const userAuthenticationType = new GraphQLObjectType({
   })
 })
 
-const userSignupAndLoginType = new GraphQLObjectType({
+const userSignupAndLoginType = new GraphQLInputObjectType({
   name: 'user_signup_login',
   fields: () => ({
     email: {
@@ -66,7 +67,7 @@ const userSignupAndLoginType = new GraphQLObjectType({
   })
 })
 
-const emailVerificationType = new GraphQLObjectType({
+const emailVerificationType = new GraphQLInputObjectType({
   name: 'user_verification_type',
   fields: () => ({
     email: {

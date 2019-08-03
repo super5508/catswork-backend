@@ -13,6 +13,14 @@ const { createrUser, signInUser, userOtpVerification} = require('./../helpers/au
  const {userAuthenticationType, secureGraphQlType,  userSignupAndLoginType, emailVerificationType} = require('./catworksAuthentication')
  const { getSelectedThingFromTable,  updateFieldInTable,  deleteSelectedRow} = require('../helpers/sql')
 
+
+ const dummyRootQuery = new GraphQLObjectType({
+  name: "dummyRootQuery",
+  fields: {
+    _dummy: { type: GraphQLInt }
+  }
+ })
+
  const Mutations = new GraphQLObjectType({
     name: 'userRootMutation',
     fields: {
@@ -62,6 +70,7 @@ const { createrUser, signInUser, userOtpVerification} = require('./../helpers/au
  })
 
  module.exports = new GraphQLSchema({
+  query:dummyRootQuery,
   mutation: Mutations
 })
 
