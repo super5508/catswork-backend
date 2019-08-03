@@ -12,7 +12,7 @@ const sendEmail = (to, subject, text) => {
   });
 
   const mailOptions = {
-    from: NODE_EMAILER_EMAI,
+    from: NODE_EMAILER_EMAIL,
     to: to,
     subject: subject,
     text: text

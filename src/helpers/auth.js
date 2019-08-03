@@ -3,6 +3,7 @@ const  bcrypt  =  require('bcryptjs');
 const { insertIntheTable, getSelectedThingFromTable } = require('./sql')
 const { genrateRandomNumber } = require('./others')
 const { generateToken } = require('./jwt')
+const sendEmail = require('./emailer')
 const saltRounds = 10;
 
 const createRandomNumberNotInTable = async (tableName, location, randomNumberLength) => {
@@ -23,7 +24,17 @@ const createrUser = async (email, password) => {
       code: 303,
       message: `Email Already exsist in Databse`
     })
-  } 
+  }
+  try {
+    const sendOtpOverEmail = await sendEmail('irohitbhatia@Outlook.com', 'Auth Verification', `${generateOtp }`)
+    console.info(`Response from otp over email:`, sendOtpOverEmail)
+  } catch (err) {
+    console.error(err)
+    throw new Error({
+      code: 500, 
+      message: JSON.stringify(err)
+    })
+  }
   const payload = {
     generated_otp: generateOtp,
     userId: generateUserId, 
@@ -31,7 +42,7 @@ const createrUser = async (email, password) => {
     email: email
   }
   const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
-  const getNewlyGeneratedAccessToken = await generateToken({userId})
+  const getNewlyGeneratedAccessToken = await generateToken({generateUserId})
   return getNewlyGeneratedAccessToken
 }
 
