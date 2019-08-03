@@ -2,7 +2,7 @@ const graphql = require("graphql")
 // GraphQL types
 const {userPersonalType, userPersonalInputType, userCreationlInputType  }= require('./catworksPersonal')
 const {userDashboardType, userDashboardInputType} = require('./catworksDashboard')
-const userAuthenticationType = require('./catworksAuthentication')
+const {userAuthenticationType} = require('./catworksAuthentication')
 // Sql Helper Function
 const { getSelectedThingFromTable,  updateFieldInTable,  deleteSelectedRow} = require('../helpers/sql')
 
@@ -22,8 +22,8 @@ const RootQuery = new GraphQLObjectType({
   fields: {
       catWorksPersonal: {
           type: userPersonalType, 
-          resolve: async (parent, args, req) => {
-            const userId = req.headers.userId
+          resolve: async (parent, args, context) => {
+            const userId = context.req.headers.userId
             //TODO: Error Handling
             const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId`,  `${userId}`)
             // since there would only be a single user with a userId, hence we aren't using list here and hence we are passing the 0th element
@@ -32,8 +32,8 @@ const RootQuery = new GraphQLObjectType({
       }, 
       catWorksDashboard: {
         type:  new GraphQLList(userDashboardType),
-        resolve: async (parent, args, req) => {
-          const userId = req.headers.userId
+        resolve: async (parent, args, context) => {
+          const userId = context.req.headers.userId
           // THis is a list, hence don't need to pass the 0th element
           const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `userId`, `${userId}`)
           return userDashboardData
@@ -41,8 +41,8 @@ const RootQuery = new GraphQLObjectType({
       },
       catWorksAuthentication: { // TODO: Verify if user authentication needs to be here
         type: userAuthenticationType,
-        resolve: async (parent, args, req) => {
-          const userId = req.headers.userId
+        resolve: async (parent, args, context) => {
+          const userId = context.req.headers.userId
           const userAuthenticationData = await getSelectedThingFromTable('CatsWork_authentication', `userId`, `${userId}`)
           return userAuthenticationData[0]
         }
@@ -64,10 +64,9 @@ const Mutations = new GraphQLObjectType({
           type: userDashboardInputType
         }
       }, 
-      resolve: async (parent, args, req) => {
-        console.log(req.headers.userId)
-        args.parameter.userId = req.headers.userId
-        const updateDashBoardInformation = await updateFieldInTable(`CatsWork_dashboard`, args.parameter, `id = ${args.id} AND userId = ${req.headers.userId}`)
+      resolve: async (parent, args, context) => {
+        const userId = context.req.headers.userId
+        const updateDashBoardInformation = await updateFieldInTable(`CatsWork_dashboard`, args.parameter, `id = ${args.id} AND userId = ${userId}`)
         return  updateDashBoardInformation[0]
       }
     }, 
@@ -78,8 +77,8 @@ const Mutations = new GraphQLObjectType({
           type: userPersonalInputType
         }
       }, 
-      resolve: async (parent, args, req) => {
-        args.parameter.userId = req.headers.userId
+      resolve: async (parent, args, context) => {
+        args.parameter.userId = context.req.headers.userId
         const updateDashBoardInformation =  await updateFieldInTable(`CatsWork_personal`, args.parameter, `userId = ${args.userId}`)
         return updateDashBoardInformation [0]
       }
@@ -91,7 +90,7 @@ const Mutations = new GraphQLObjectType({
           type: new GraphQLNonNull(GraphQLInt)
         }
       },
-      resolve: async (parent, args, req) => {
+      resolve: async (parent, args, context) => {
         //Create function to delete entire row from the dashboard
         try {
         const deleteSelectedRecord = await deleteSelectedRow(`CatsWork_dashboard`, `id`, args.id)
@@ -109,8 +108,8 @@ const Mutations = new GraphQLObjectType({
           type: userDashboardInputType
         }
       }, 
-      resolve: async (parent, args, request) => {
-        args.parameter.userId = req.headers.userId
+      resolve: async (parent, args, context) => {
+        args.parameter.userId = context.req.headers.userId
         try {
           const addLinkedinUser = await insertIntheTable('CatsWork_dashboard', payload)
           return true
@@ -127,8 +126,8 @@ const Mutations = new GraphQLObjectType({
           type: userCreationlInputType
         }
       }, 
-      resolve: async (parent, args, request) => {
-        args.parameter.userId = req.headers.userId
+      resolve: async (parent, args, context) => {
+        args.parameter.userId = context.req.headers.userId
         //Check if user info already exsist
         const checkIfUserInformationExsist = await getSelectedThingFromTable('CatsWork_personal', 'userId', `${userId}`)
         if (checkIfUserInformationExsist[0]) {

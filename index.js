@@ -3,6 +3,7 @@ const express = require('express')
 const app = express();
 const graphqlHTTP = require("express-graphql")
 const userSchema = require('./src/schema/user')
+const authSchema = require('./src/schema/auth')
 const mysql = require('mysql');
 const config = require('./src/config.js')
 const morgan = require('morgan')
@@ -51,14 +52,21 @@ app.use(cors());
 
 //For tracking responsive time (in headers)
 app.use(responseTime())
-app.use('/auth', tempRoutes)
+// app.use('/auth', tempRoutes)
+
+app.use("/auth", (req, res) => graphqlHTTP({
+  schema: authSchema, //TODO: Change it authentication once it is ready
+  graphiql: true,
+  context: {req, res}
+})(req, res)) 
+
 app.use(verifyUser)
 
 // GraphQL setup
 app.use("/user", (req, res) => graphqlHTTP({
   schema: userSchema, //TODO: Change it authentication once it is ready
   graphiql: true,
-  context: req
+  context: {req, res}
 })(req, res)) 
 
 // Just the test api endpoint to test services and configuration 
@@ -68,8 +76,6 @@ app.get('/test', async (req, res) => {
   console.log(`Result from Query:`,  resultFromQuery)
   res.status(200).json(resultFromQuery[0])
 });
-
-
 
 //Listen to specific post 
 app.listen(4000, () => {

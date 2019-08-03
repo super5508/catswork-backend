@@ -7,10 +7,11 @@ const {
   GraphQLString,
   GraphQLID,
   GraphQLInt,
-  GraphQLList
+  GraphQLList,
+  GraphQLNonNull
 } = graphql
 
-const userAuthentication = new GraphQLObjectType({
+const userAuthenticationType = new GraphQLObjectType({
   name: 'user_authentications',
   fields: () => ({
     id: {
@@ -53,4 +54,42 @@ const userAuthentication = new GraphQLObjectType({
   })
 })
 
-module.exports = userAuthentication 
+const userSignupAndLoginType = new GraphQLObjectType({
+  name: 'user_signup_login',
+  fields: () => ({
+    email: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    password: {
+      type: new GraphQLNonNull(GraphQLString)
+    }
+  })
+})
+
+const emailVerificationType = new GraphQLObjectType({
+  name: 'user_verification_type',
+  fields: () => ({
+    email: {
+      type: new GraphQLNonNull(GraphQLString)
+    }, 
+    generated_otp: {
+      type: new GraphQLNonNull(GraphQLInt)
+    }
+  })
+})
+
+const secureGraphQlType = new GraphQLObjectType({
+  name: 'user_secure_fields', 
+  fields: () => ({
+    email: {
+      type: GraphQLString
+    }
+  })
+})
+
+module.exports = { 
+  userAuthenticationType, 
+  userSignupAndLoginType,
+  emailVerificationType,
+  secureGraphQlType
+}
