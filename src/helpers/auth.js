@@ -1,6 +1,6 @@
 const  jwt  =  require('jsonwebtoken');
 const  bcrypt  =  require('bcryptjs'); 
-const { insertIntheTable, getSelectedThingFromTable } = require('./sql')
+const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./sql')
 const { genrateRandomNumber } = require('./others')
 const { generateToken } = require('./jwt')
 const sendEmail = require('./emailer')
@@ -42,8 +42,9 @@ const createrUser = async (email, password) => {
     email: email
   }
   const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
-  const getNewlyGeneratedAccessToken = await generateToken({generateUserId})
-  return getNewlyGeneratedAccessToken
+  return true
+  // const getNewlyGeneratedAccessToken = await generateToken({generateUserId})
+  // return getNewlyGeneratedAccessToken
 }
 
 const signInUser = async (email, passwordEntered, token) => {
@@ -52,6 +53,12 @@ const signInUser = async (email, passwordEntered, token) => {
     throw new Error({
       code: 401,
       message: `Email does not exsist`
+    })
+  }
+  if (getDataAssociatedwithEmail[0].isVerified === 0) {
+    throw new Error({
+      code: 422, 
+      message:  `User not verfified`
     })
   }
   const { userId, password } =  getDataAssociatedwithEmail[0]
@@ -67,9 +74,38 @@ const signInUser = async (email, passwordEntered, token) => {
   //Generate token
 }
 
+const verifyUser = async (email, userOtp) => {
+  const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
+  if (!getDataAssociatedwithEmail) {
+    throw new Error({
+      code: 401,
+      message: `Email does not exsist`
+    })
+  }
+  else {
+    const { generated_otp, userId } = getDataAssociatedwithEmail[0]
+    console.log(`This is generated Otp`, generated_otp)
+    if (generated_otp == userOtp) {
+      const payload = {
+        isVerified: 1
+      }
+      const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', payload, 'email', `"${email}"`)
+      const getNewlyGeneratedAccessToken = await generateToken({userId})
+      return getNewlyGeneratedAccessToken
+    } else {
+      throw new Error({
+        code: 401,
+        message: `Incorrect otp`
+      })
+    }
+
+  }
+}
+
 
 module.exports = {
   createrUser,
-  signInUser
+  signInUser,
+  verifyUser
 }
 

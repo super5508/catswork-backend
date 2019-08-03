@@ -86,10 +86,10 @@ const deleteSelectedRow = (tableName, toDeleteCondition, toDeleteValue) => {
 const updateFieldInTable = (tableName, updatedQuery, locationReference, locationReferenceValue) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
-      console.log(`Queries Value:`, tableName, updatedQuery, locationReference, locationReferenceValue)
       if (error) return reject(error)
       if (updatedQuery) updatedQuery = setValuesForMutation(updatedQuery)
-      const query = `UPDATE ${tableName} SET ${updatedQuery} + 'WHERE' ${locationReference} = ${locationReferenceValue}`
+      const query = `UPDATE ${tableName} SET ${updatedQuery} WHERE ${locationReference} = ${locationReferenceValue}`
+      console.log(`Query`, query)
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -135,6 +135,7 @@ const setValuesForMutation = (valuePassed) => {
         newQuery = newQuery + x + '=' + valuePassed[x] + ','
       }
     }
+    newQuery = newQuery.slice(0, -1)
   }
   if (typeof valuePassed === "string") newQuery = valuePassed.trim()
   return newQuery

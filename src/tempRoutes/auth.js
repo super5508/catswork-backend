@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { signInUser,  createrUser } = require('../helpers/auth')
+const { signInUser,  createrUser, verifyUser } = require('../helpers/auth')
 
 router.get('/temp', async(req, res) => {
   res.send('temp route working')
@@ -25,6 +25,18 @@ router.post('/login', async (req, res) => {
   try {
     const createdUserToken = await signInUser(email, password)
     res.send(createdUserToken)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send(JSON.parse(JSON.stringify(err)))
+  }
+})
+
+router.post('/verifyUser', async (req, res) => {
+  const email = req.body.email
+  const otp = req.body.otp
+  try {
+    const createdUserToken = await verifyUser(email, otp)
+    res.status(500).send(createdUserToken)
   } catch (err) {
     console.error(err)
     res.status(500).send(JSON.parse(JSON.stringify(err)))
