@@ -99,14 +99,7 @@ const updateFieldInTable = (tableName, updatedQuery, locationReference, location
   })
 }
 
-
-//Check if the entry is unqiue or not in sql 
-
-
-
-
 //TODO: Create Multiple Reference function or adding multiple values at once
-
 const readOnlyValues = {
   createdAt: true,
   updatedAt: true,
@@ -147,15 +140,11 @@ const setValuesForMutation = (valuePassed) => {
   return newQuery
 }
 
-
-
 const cleanValues = (valuePassed) => {
   //TODO: For object as well
   if (typeof valuePassed === "string") newQuery = valuePassed.trim()
   return valuePassed
 }
-
-
 
 module.exports =  {
   getEverythingFromTable,
