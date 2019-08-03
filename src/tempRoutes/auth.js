@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { signInUser,  createrUser, verifyUser } = require('../helpers/auth')
+const { signInUser,  createrUser, verifyUser, userOtpVerification } = require('../helpers/auth')
 
 router.get('/temp', async(req, res) => {
   res.send('temp route working')
@@ -35,11 +35,16 @@ router.post('/verifyUser', async (req, res) => {
   const email = req.body.email
   const otp = req.body.otp
   try {
-    const createdUserToken = await verifyUser(email, otp)
+    const createdUserToken = await userOtpVerification(email, otp)
     res.status(500).send(createdUserToken)
   } catch (err) {
     console.error(err)
     res.status(500).send(JSON.parse(JSON.stringify(err)))
   }
+})
+
+router.get('/sampleAuthtestRoute', verifyUser, (req, res) => {
+  console.log(`This is req headers userid ${req.headers.userId}`)
+  res.send(req.headers.userId)
 })
 module.exports = router

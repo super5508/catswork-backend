@@ -1,8 +1,7 @@
-const  jwt  =  require('jsonwebtoken');
 const  bcrypt  =  require('bcryptjs'); 
 const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./sql')
 const { genrateRandomNumber } = require('./others')
-const { generateToken } = require('./jwt')
+const { generateToken, verifyToken } = require('./jwt')
 const sendEmail = require('./emailer')
 const saltRounds = 10;
 
@@ -74,7 +73,7 @@ const signInUser = async (email, passwordEntered, token) => {
   //Generate token
 }
 
-const verifyUser = async (email, userOtp) => {
+const userOtpVerification = async (email, userOtp) => {
   const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
   if (!getDataAssociatedwithEmail) {
     throw new Error({
@@ -98,14 +97,40 @@ const verifyUser = async (email, userOtp) => {
         message: `Incorrect otp`
       })
     }
-
   }
+}
+
+const verifyUser = async (req, res, next) => {
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader !== 'undefined') {
+      try {
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        console.log(`This is bearerToken:`, bearerToken)
+        // Verify token
+        const tokenVerficiation = await verifyToken(bearerToken)
+        console.log(`This is token Verfication Response:`, tokenVerficiation)
+        req.headers.userId =  tokenVerficiation 
+        next();
+      } catch (error) {
+        throw new Error({
+          code: 401,
+          message: `Unauthorized token`
+        })
+      }
+    } else {
+      throw new Error({
+        code: 401,
+        message: `Not Authorized to view this`
+      })
+    }
 }
 
 
 module.exports = {
   createrUser,
   signInUser,
+  userOtpVerification,
   verifyUser
 }
 
