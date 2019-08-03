@@ -3,6 +3,7 @@ const  bcrypt  =  require('bcryptjs');
 const { insertIntheTable, getSelectedThingFromTable } = require('./sql')
 const { genrateRandomNumber } = require('./others')
 const { generateToken } = require('./jwt')
+const saltRounds = 10;
 
 const createRandomNumberNotInTable = async (tableName, location, randomNumberLength) => {
     const generateNumber = genrateRandomNumber(randomNumberLength)
@@ -12,15 +13,18 @@ const createRandomNumberNotInTable = async (tableName, location, randomNumberLen
     else if (!checkIfNumberExsist[0]) return generateNumber
 }
 
-const createrUser = async (email, password, expiryTime) => {
-  const hashedPassword =  bcrypt.hashSync(password)
+const createrUser = async (email, password) => {
+  const hashedPassword =  bcrypt.hashSync(password, saltRounds)
   const generateOtp = await createRandomNumberNotInTable('CatsWork_authentication', 'generated_otp', 5)
   console.log(`Generated Random Number:`, generateOtp)
   const generateUserId = await createRandomNumberNotInTable('CatsWork_authentication','userId', 7)
   const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
   console.log(`Email Exsist:`,  checkIfEmailExsist)
   if (checkIfEmailExsist[0]) {
-    throw new Error(`Email Already exsist`)
+    throw new Error({
+      code: 303,
+      message: `Email Already exsist in Databse`
+    })
   } 
   const payload = {
     generated_otp: generateOtp,
@@ -34,13 +38,37 @@ const createrUser = async (email, password, expiryTime) => {
   const newPayload = {
     userId:  generateUserId 
   }
-  const getNewlyGeneratedAccessToken = await generateToken(payload, expiryTime)
+  const getNewlyGeneratedAccessToken = await generateToken(payload)
   console.log(`Newly Generated Access Token`,  getNewlyGeneratedAccessToken)
   return getNewlyGeneratedAccessToken
 }
 
-const signInUser = (email, password, token) => {
-  
+const signInUser = async (email, passwordEntered, token) => {
+  //load password keeping email as key 
+  const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
+  console.log(`Data Associated with email:`, getDataAssociatedwithEmail)
+  if (!getDataAssociatedwithEmail) {
+    throw new Error({
+      code: 401,
+      message: `Email does not exsist`
+    })
+  const { userId, password } =  getDataAssociatedwithEmail[0].data
+  console.log( `This is userId & password:`, userId, password)
+
+    // compare password 
+    const doesPasswordMatch = bcrypt.compareSync(passwordEntered, password)
+    if (!doesPasswordMatch) {
+      throw new Error({
+        code: 422,
+        message: `Password is incorrect`
+      }) 
+    }
+
+  }
+  const getNewlyGeneratedAccessToken = await generateToken(payload)
+  console.log(`Newly Generated Access Token`,  getNewlyGeneratedAccessToken)
+  return getNewlyGeneratedAccessToken
+  //Generate token
 }
 
 

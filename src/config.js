@@ -11,7 +11,11 @@ DB_PASSWORD: process.env.DB_PASSWORD || 'root',
 DB_DATABASE: process.env.DB_DATABASE || 'database',
 // JWT CONFIG 
 JWT_ISSUER: process.env.JWT_ISSUER || 'CatsWork',
-JWT_SECRET: process.env.JWT_SECRET || 'CatsWork'
+JWT_SECRET: process.env.JWT_SECRET || 'CatsWork',
+
+JWT_SESSION_DURATION: process.env.JWT_SESSION_DURATION || '7h' //This is JWT session duration after login
+
+
 }
 
 
