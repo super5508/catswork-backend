@@ -61,6 +61,7 @@ const signInUser = async (email, passwordEntered, token) => {
     })
   }
   const { userId, password } =  getDataAssociatedwithEmail[0]
+  //TODO: Move from Sync, Since it is blocking the thread
   const doesPasswordMatch = bcrypt.compareSync(passwordEntered, password)
   if (!doesPasswordMatch) {
     throw new Error({
@@ -110,6 +111,7 @@ const verifyUser = async (req, res, next) => {
         // Verify token
         const tokenVerficiation = await verifyToken(bearerToken)
         console.log(`This is token Verfication Response:`, tokenVerficiation)
+        //TODO: Use res.locals
         req.headers.userId =  tokenVerficiation.userId
         next();
       } catch (error) {
