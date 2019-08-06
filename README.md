@@ -124,6 +124,7 @@ Response from above would be
   }
 }
 ```
+
 #### Login User
 
 Query
@@ -154,6 +155,112 @@ Response
 }
 ```
 <strong> Note: </strong> Authentication does not have any root query
+
+### Root query
+
+<strong> Note: </strong> Kindly check the SQL dumb for the fields which are mandatory and suggest changes to change SQL and Query accordingly 
+<Strong> Note: </strong> Access Token should be in the header to access `user` route. This is how we are verifying token in the backend 
+
+```
+const verifyUser = async (req, res, next) => {
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader !== 'undefined') {
+      try {
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        // Verify token
+        const tokenVerficiation = await verifyToken(bearerToken)
+        //TODO: Use res.locals
+        req.headers.userId =  tokenVerficiation.userId
+        next();
+      } catch (error) {
+        return res.status(401).send(`Invalid Access token`)
+      }
+    } else {
+     return res.status(401).send(`Not Authorized to view this`)
+    }
+}
+```
+
+### Requests to get data 
+
+#### User Personal Data 
+
+Query 
+
+```
+{
+  catWorksPersonal {
+    userId,
+    name
+  }
+}
+```
+
+Response 
+
+```
+{
+    "data": {
+        "catWorksPersonal": {
+            "userId": 54867980,
+            "name": "Rohit"
+        }
+    }
+}
+```
+ All the available for the enum can be seen at: https://github.com/craycrayfish/catswork-backend/blob/master/src/schema/catworksPersonal.js
+ 
+ 
+#### User Dashboard Data 
+
+Query 
+
+```
+{
+    "data": {
+        "catWorksDashboard": [
+            {
+                "id": 2,
+                "userId": 54867980,
+                "company": "Uberhunt"
+            },
+            {
+                "id": 3,
+                "userId": 54867980,
+                "company": "spaceyfi"
+            }
+        ]
+    }
+}
+```
+Response 
+
+```
+{
+    "data": {
+        "catWorksDashboard": [
+            {
+                "id": 2,
+                "userId": 54867980,
+                "company": "Uberhunt"
+            },
+            {
+                "id": 3,
+                "userId": 54867980,
+                "company": "spaceyfi"
+            }
+        ]
+    }
+}
+```
+
+Types Can be seen here: https://github.com/craycrayfish/catswork-backend/blob/master/src/schema/catworksDashboard.js
+
+
+
+
+
 
 
 ## Known Pending tasks (for now)
