@@ -115,16 +115,10 @@ const verifyUser = async (req, res, next) => {
         req.headers.userId =  tokenVerficiation.userId
         next();
       } catch (error) {
-        throw new Error({
-          code: 401,
-          message: `Unauthorized token`
-        })
+        return res.status(401).send(`Invalid Access token`)
       }
     } else {
-      throw new Error({
-        code: 401,
-        message: `Not Authorized to view this`
-      })
+     return res.status(401).send(`Not Authorized to view this`)
     }
 }
 

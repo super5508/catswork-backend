@@ -22,6 +22,7 @@ const logDirectory = path.join(__dirname, "logs");
 const responseTime = require('response-time')
 // verifyUser 
 const {verifyUser} = require('./src/helpers/auth')
+const asyncHandler = require('express-async-handler')
 
 // Checking if path access and if not creating a path for logs
 fs.stat(logDirectory, (err, stats) => {
@@ -63,11 +64,14 @@ app.use("/auth", (req, res) => graphqlHTTP({
 app.use(verifyUser)
 
 // GraphQL setup
-app.use("/user", (req, res) => graphqlHTTP({
+app.use("/user", async(req, res) => graphqlHTTP({
   schema: userSchema, //TODO: Change it authentication once it is ready
   graphiql: true,
-  context: {req, res}
-})(req, res)) 
+  context: {req, res},
+  customFormatErrorFn (error) {
+    console.error(`Error in GraphQL:`, error)
+  }
+})(req, res))
 
 // Just the test api endpoint to test services and configuration 
 // TODO: remove it.
