@@ -4,9 +4,6 @@
 npm install
 ```
 
-
-
-
 ## Environment Configuration 
 
 1. Create your own environment file (.env), we are using dotenv
@@ -54,20 +51,132 @@ const ErrorTypes = {
 module.exports = ErrorTypes
 ```
 
+## Authentication flow
+
+1. User enters email address & password 
+2. Authentication code is sent to email address or error is thrown 
+3. User Verifies the authentication, user authentication Process completes 
+
+#### Registrating User Sample Query 
+
+Almost all the auth Queries return three things 
+
+Where 
+```
+success: boolean 
+userID: int
+email: string (optional only available when new user is created)
+```
+<strong> Note </strong> From user privacy protection, email Id isn't added or returned in the payload 
+
+```
+mutation {
+  RegisterUser(
+     body: {
+   		email:"irohitbhatia@outlook.com",
+      password: "rohit1243"
+  	}
+  ) {
+    userId
+  }
+}
+```
+
+Response from above user 
+
+```
+{
+  "data": {
+    "RegisterUser": {
+      "userId": 81763535
+    }
+  }
+}
+```
+
+#### Verify OTP 
+
+```
+mutation {
+  userOtpVerification(
+     body: {
+   		email:"irohitbhatia@outlook.com",
+      generated_otp: 581109
+  	}
+  ) {
+    userId, 
+    accessToken, 
+    success
+  }
+}
+```
+
+Response from above would be 
+
+```
+{
+  "data": {
+    "userOtpVerification": {
+      "userId": 81763535,
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjgxNzYzNTM1LCJpYXQiOjE1NjUwOTc1NDcsImV4cCI6MTU2NTcwMjM0NywiaXNzIjoiVlBBUksifQ.DvrEsAjqVGZddelcBI6506d8s7GOiinDUbzD1ROVNZw",
+      "success": true
+    }
+  }
+}
+```
+#### Login User
+
+Query
+``` 
+mutation {
+  loginUser(
+     body: {
+   		email:"irohitbhatia@gmail.com",
+      password: "rohitrohit"
+  	}
+  ) {
+    userId, 
+    accessToken, 
+    success
+  }
+}
+```
+Response 
+```
+{
+  "data": {
+    "loginUser": {
+      "userId": 54867980,
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjU0ODY3OTgwLCJpYXQiOjE1NjUwOTc4NzcsImV4cCI6MTU2NTcwMjY3NywiaXNzIjoiVlBBUksifQ.wZNRKw7jCv59BxxVu8Cmf3njEnE69Ze99simYsuR7zE",
+      "success": true
+    }
+  }
+}
+```
+<strong> Note: </strong> Authentication does not have any root query
 
 
-## Pending tasks (for now)
-[ ] Setup husky and opinionated style coding
-[ ] Unit testing
-[ ] finding if email address is .edu
-[ ] Resend OTP message and expiring OTP text 
+## Known Pending tasks (for now)
+
+1. Setup husky and opinionated style coding
+
+2. Unit testing
+
+3. finding if email address is .edu
+
+4. Resend OTP message and expiring OTP text 
+
+5. If user OTP is verified, user can't verify otp again
 
 
 
-## Errors 1067
-[SFO ANSWER TO FIX IT](https://stackoverflow.com/questions/36882149/error-1067-42000-invalid-default-value-for-created-at)
+## Dummy Mutation 
 
-[GraphQL Input type Error](https://stackoverflow.com/questions/45806368/graphql-error-field-type-must-be-input-type-but-got?rq=1)
+Mutation are divided into two segments, 
+1. User based Mutation 
+2. Authentication Based Mutations 
+
+Sample Mutations 
 
 
 ## Dummy Query 
