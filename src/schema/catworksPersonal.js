@@ -19,6 +19,9 @@ const {
  const userPersonalType = new GraphQLObjectType({
   name: 'user_personal',
   fields: () => ({
+    name: {
+      type: GraphQLString
+    },
     id: {
       type: GraphQLInt
     },

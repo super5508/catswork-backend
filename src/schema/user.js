@@ -27,6 +27,7 @@ const RootQuery = new GraphQLObjectType({
             //TODO: Error Handling
             const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId`,  `${userId}`)
             // since there would only be a single user with a userId, hence we aren't using list here and hence we are passing the 0th element
+            console.log(getUserDataFromTable)
             return getUserDataFromTable[0]
           }
       }, 

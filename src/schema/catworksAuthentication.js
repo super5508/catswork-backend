@@ -95,9 +95,25 @@ const successType= new GraphQLObjectType({
   })
 })
 
+const accessTokenGeneration =new GraphQLObjectType({
+  name: 'access_token_fields', 
+  fields: () => ({
+    success: {
+      type: new GraphQLNonNull(GraphQLBoolean)
+    }, 
+    userId: {
+      type: new GraphQLNonNull(GraphQLInt)
+    }, 
+    accessToken: {
+      type: GraphQLString
+    }
+  })
+})
+
 module.exports = { 
   userAuthenticationType, 
   userSignupAndLoginType,
   emailVerificationType,
-  successType
+  successType,
+  accessTokenGeneration
 }

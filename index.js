@@ -24,6 +24,7 @@ const responseTime = require('response-time')
 const {verifyUser} = require('./src/helpers/auth')
 const asyncHandler = require('express-async-handler')
 const errorFormater = require('./src/helpers/errorFixer')
+const cookieParser = require('cookie-parser')
 // Checking if path access and if not creating a path for logs
 fs.stat(logDirectory, (err, stats) => {
   if (err) {
@@ -50,7 +51,7 @@ app.use(morgan("combined", { stream: stream }))
 app.use(helmet())
 // Setting cors 
 app.use(cors());
-
+// app.use(express.cookieParser())
 //For tracking responsive time (in headers)
 app.use(responseTime())
 // app.use('/auth', tempRoutes)
@@ -60,9 +61,12 @@ app.use("/auth", (req, res) => graphqlHTTP({
   graphiql: true,
   context: {req, res},
   customFormatErrorFn: error => { 
+    console.error(error)
+    // if (error.message) {
     const { message, status } = errorFormater(error.message)
+    // }
     return {
-    code: status,
+    code: status, 
     message: message,
     locations: error.locations,
     stack: error.stack ? error.stack.split('\n') : [],
@@ -74,17 +78,22 @@ app.use("/auth", (req, res) => graphqlHTTP({
 app.use(verifyUser)
 
 // GraphQL setup
-app.use("/user", async(req, res) => graphqlHTTP({
+app.use("/user", async  (req, res) => graphqlHTTP({
   schema: userSchema, //TODO: Change it authentication once it is ready
   graphiql: true,
   context: {req, res},
-  customFormatErrorFn: error => ({
-    message: error.message,
+  customFormatErrorFn: error => { 
+    console.error(`GraphQL Error:`, error)
+    const { message, status } = errorFormater(error.message)
+    return {
+    code: status, 
+    message: message,
     locations: error.locations,
     stack: error.stack ? error.stack.split('\n') : [],
     path: error.path,
-  })
-}))
+    }
+  }
+})(req, res)) 
 
 // Just the test api endpoint to test services and configuration 
 // TODO: remove it.

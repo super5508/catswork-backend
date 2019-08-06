@@ -9,7 +9,7 @@ const {
   GraphQLBoolean,
  } = graphql
 const { createrUser, signInUser, userOtpVerification} = require('./../helpers/auth')
- const {userAuthenticationType, successType,  userSignupAndLoginType, emailVerificationType} = require('./catworksAuthentication')
+ const {userAuthenticationType, successType,  userSignupAndLoginType, emailVerificationType, accessTokenGeneration} = require('./catworksAuthentication')
  const { getSelectedThingFromTable,  updateFieldInTable,  deleteSelectedRow} = require('../helpers/sql')
  const util = require('util')
 
@@ -41,7 +41,7 @@ const { createrUser, signInUser, userOtpVerification} = require('./../helpers/au
       }
     },
     loginUser: {
-      type: successType,
+      type: accessTokenGeneration,
       args: {
         body: {
           type: userSignupAndLoginType
@@ -49,13 +49,16 @@ const { createrUser, signInUser, userOtpVerification} = require('./../helpers/au
       },
       resolve: async (parent, args, context) => {
         const { email, password } = args.body
-        console.log(`User sign up`, email, password)
         const createrNewUser = await signInUser(email, password)
-        return true
+        return {
+          success: true,
+          userId: createrNewUser.userId, 
+          accessToken: createrNewUser.getNewlyGeneratedAccessToken
+        }
       }
     },
     userOtpVerification: {
-      type: successType,
+      type: accessTokenGeneration,
       args: {
         body: {
           type: emailVerificationType
@@ -63,9 +66,12 @@ const { createrUser, signInUser, userOtpVerification} = require('./../helpers/au
       },
       resolve: async (parent, args, context) => {
         const { email, generated_otp } = args.body
-        console.log(`User sign up`, email, password)
-        const createrNewUser = await userOtpVerification(email, password)
-        return true
+        const createrNewUser = await userOtpVerification(email, generated_otp)
+        return {
+          success: true,
+          userId: createrNewUser.userId, 
+          accessToken: createrNewUser.getNewlyGeneratedAccessToken
+        }
       }
     }
   }

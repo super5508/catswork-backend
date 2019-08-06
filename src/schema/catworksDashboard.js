@@ -62,8 +62,6 @@ const userDashboardType = new GraphQLObjectType({
     userInformation: {
       type: require('./catworksPersonal').userPersonalType, 
       resolve: async (parent, args, request) => {
-        //TODO: Error Handling
-        console.log(`Parent User Id:`, parent[0].userId) //Since ID is going to be same everywhere
         const userData = await getSelectedThingFromTable('CatsWork_personal', `userId`, `${parent[0].userId}`)
         return userData[0]
       }

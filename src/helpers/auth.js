@@ -22,12 +22,8 @@ const createrUser = async (email, password) => {
   if (checkIfEmailExsist[0]) {
     throw new Error(ErrorTypes.EMAIL_EXISTS)
   }
-  try {
-    const sendOtpOverEmail = await sendEmail('irohitbhatia@Outlook.com', 'Auth Verification', `${generateOtp }`)
-  } catch (error) {
-    console.error(`Problem In Sending Authentication Message:`, error)
-    throw new Error(ErrorTypes.AUTHENTICATION_OTP_MESSSGE_PROBLEM)
-  }
+
+  const sendOtpOverEmail = await sendEmail('irohitbhatia@Outlook.com', 'Auth Verification', `${generateOtp }`)
   const payload = {
     generated_otp: generateOtp,
     userId: generateUserId, 
@@ -52,7 +48,11 @@ const signInUser = async (email, passwordEntered, token) => {
     throw new Error(ErrorTypes.INCORRECT_PASSWORD) 
   }
   const getNewlyGeneratedAccessToken = await generateToken({userId})
-  return getNewlyGeneratedAccessToken
+  // const cookie = req.cookies.cookieName;
+  // if (cookie === undefined){
+  //   res.cookie('userId', getNewlyGeneratedAccessToken);
+  // }
+  return {userId, getNewlyGeneratedAccessToken}
 }
 
 const userOtpVerification = async (email, userOtp) => {
@@ -68,7 +68,7 @@ const userOtpVerification = async (email, userOtp) => {
         }
         const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', payload, `email = "${email}"`)
         const getNewlyGeneratedAccessToken = await generateToken({userId})
-        return getNewlyGeneratedAccessToken
+        return {getNewlyGeneratedAccessToken, userId}
       } else {
         throw new Error(ErrorTypes.INCORRECT_OTP)
       }
@@ -86,11 +86,12 @@ const verifyUser = async (req, res, next) => {
         const tokenVerficiation = await verifyToken(bearerToken)
         //TODO: Use res.locals
         req.headers.userId =  tokenVerficiation.userId
-        next();
+        next()
       } catch (error) {
+        console.error(error)
         return res.status(401).send(`Invalid Access token`)
       }
-    } else {
+    } else { 
      return res.status(401).send(`Not Authorized to view this`)
     }
 }
