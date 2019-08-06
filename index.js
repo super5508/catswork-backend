@@ -68,9 +68,10 @@ app.use("/user", async(req, res) => graphqlHTTP({
   schema: userSchema, //TODO: Change it authentication once it is ready
   graphiql: true,
   context: {req, res},
-  customFormatErrorFn (error) {
-    console.error(`Error in GraphQL:`, error)
-  }
+  customFormatErrorFn: error => ({
+    message: error.message,
+    code: error.code
+  })
 })(req, res))
 
 // Just the test api endpoint to test services and configuration 

@@ -38,7 +38,6 @@ const getEverythingFromTable =  (tableName) => {
 const getSelectedThingFromTable = (tableName, locationReference, locationReferenceValue) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
-      console.log(`Queries Value:`, tableName, locationReference, locationReferenceValue)
       if (error) return reject(error)
       const query = `SELECT * FROM ${tableName} WHERE ${locationReference} = ${locationReferenceValue}`
       connection.query(query, (err, response) => {

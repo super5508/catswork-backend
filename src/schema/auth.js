@@ -9,10 +9,9 @@ const {
   GraphQLBoolean,
  } = graphql
 const { createrUser, signInUser, userOtpVerification} = require('./../helpers/auth')
-
- const {userAuthenticationType, secureGraphQlType,  userSignupAndLoginType, emailVerificationType} = require('./catworksAuthentication')
+ const {userAuthenticationType, successType,  userSignupAndLoginType, emailVerificationType} = require('./catworksAuthentication')
  const { getSelectedThingFromTable,  updateFieldInTable,  deleteSelectedRow} = require('../helpers/sql')
-
+ const util = require('util')
 
  const dummyRootQuery = new GraphQLObjectType({
   name: "dummyRootQuery",
@@ -25,21 +24,28 @@ const { createrUser, signInUser, userOtpVerification} = require('./../helpers/au
     name: 'userRootMutation',
     fields: {
       RegisterUser: {
-        type: secureGraphQlType,
+        type: successType,
       args: {
         body: {
           type: userSignupAndLoginType
         }
       },
       resolve: async (parent, args, context) => {
-        const { email, password } = args.body
-        console.log(`User sign up`, email, password)
-        const createrNewUser = await createrUser(email, password)
-        return true
+        try {
+          const { email, password } = args.body
+          const newlyCreatedUser = await createrUser(email, password)
+          return {
+            success: true, 
+            userId: newlyCreatedUser.generateUserId,
+            email: newlyCreatedUser.email
+          }
+        } catch (error) {
+          console.error(`Confirming that there is an error:`, error)
+        }
       }
     },
     loginUser: {
-      type: secureGraphQlType,
+      type: successType,
       args: {
         body: {
           type: userSignupAndLoginType
@@ -53,7 +59,7 @@ const { createrUser, signInUser, userOtpVerification} = require('./../helpers/au
       }
     },
     userOtpVerification: {
-      type: secureGraphQlType,
+      type: successType,
       args: {
         body: {
           type: emailVerificationType

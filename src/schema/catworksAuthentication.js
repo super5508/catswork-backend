@@ -9,7 +9,8 @@ const {
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull, 
-  GraphQLInputObjectType
+  GraphQLInputObjectType,
+  GraphQLBoolean
 } = graphql
 
 const userAuthenticationType = new GraphQLObjectType({
@@ -79,9 +80,15 @@ const emailVerificationType = new GraphQLInputObjectType({
   })
 })
 
-const secureGraphQlType = new GraphQLObjectType({
+const successType= new GraphQLObjectType({
   name: 'user_secure_fields', 
   fields: () => ({
+    success: {
+      type: new GraphQLNonNull(GraphQLBoolean)
+    }, 
+    userId: {
+      type: new GraphQLNonNull(GraphQLInt)
+    }, 
     email: {
       type: GraphQLString
     }
@@ -92,5 +99,5 @@ module.exports = {
   userAuthenticationType, 
   userSignupAndLoginType,
   emailVerificationType,
-  secureGraphQlType
+  successType
 }

@@ -120,6 +120,8 @@ const GenderType = new GraphQLEnumType({
   },
 });
 
+
+
 module.exports = {
   MonthType,
   industryType,

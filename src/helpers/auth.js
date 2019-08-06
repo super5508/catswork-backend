@@ -2,13 +2,14 @@ const  bcrypt  =  require('bcryptjs');
 const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./sql')
 const { genrateRandomNumber } = require('./others')
 const { generateToken, verifyToken } = require('./jwt')
+const ErrorTypes = require('./../enums/errorTypes')
 const sendEmail = require('./emailer')
 const saltRounds = 10;
+
 
 const createRandomNumberNotInTable = async (tableName, location, randomNumberLength) => {
   const generateNumber = genrateRandomNumber(randomNumberLength)
   const checkIfNumberExsist = await getSelectedThingFromTable(tableName, location, generateNumber)
-  console.log(`This is check if number exsist value`,  checkIfNumberExsist)
   if (checkIfNumberExsist[0]) return createRandomNumberNotInTable(tableName, location, randomNumberLength)
   else if (!checkIfNumberExsist[0]) return generateNumber
 }
@@ -19,20 +20,13 @@ const createrUser = async (email, password) => {
   const generateUserId = await createRandomNumberNotInTable('CatsWork_authentication','userId', 7)
   const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
   if (checkIfEmailExsist[0]) {
-    throw new Error({
-      code: 303,
-      message: `Email Already exsist in Databse`
-    })
+    throw new Error(ErrorTypes.EMAIL_EXISTS)
   }
   try {
     const sendOtpOverEmail = await sendEmail('irohitbhatia@Outlook.com', 'Auth Verification', `${generateOtp }`)
-    console.info(`Response from otp over email:`, sendOtpOverEmail)
-  } catch (err) {
-    console.error(err)
-    throw new Error({
-      code: 500, 
-      message: JSON.stringify(err)
-    })
+  } catch (error) {
+    console.error(`Problem In Sending Authentication Message:`, error)
+    throw new Error(ErrorTypes.AUTHENTICATION_OTP_MESSSGE_PROBLEM)
   }
   const payload = {
     generated_otp: generateOtp,
@@ -40,64 +34,53 @@ const createrUser = async (email, password) => {
     password: hashedPassword, 
     email: email
   }
+  try {
   const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
-  return true
-  // const getNewlyGeneratedAccessToken = await generateToken({generateUserId})
-  // return getNewlyGeneratedAccessToken
+  return {generateUserId, email}
+  } catch (error) {
+    console.error(`Problem In Adding Data in Databse`, error)
+    throw new Error(ErrorTypes.SQL_ERROR)
+  }
 }
 
 const signInUser = async (email, passwordEntered, token) => {
   const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
   if (!getDataAssociatedwithEmail) {
-    throw new Error({
-      code: 401,
-      message: `Email does not exsist`
-    })
+    throw new Error(ErrorTypes.EMAIL_EXISTS)
   }
   if (getDataAssociatedwithEmail[0].isVerified === 0) {
-    throw new Error({
-      code: 422, 
-      message:  `User not verfified`
-    })
+   throw new Error(ErrorTypes.UNVERIFIED_EMAIL)
   }
   const { userId, password } =  getDataAssociatedwithEmail[0]
-  //TODO: Move from Sync, Since it is blocking the thread
   const doesPasswordMatch = bcrypt.compareSync(passwordEntered, password)
   if (!doesPasswordMatch) {
-    throw new Error({
-      code: 422,
-      message: `Password is incorrect`
-    }) 
+    throw new Error(ErrorTypes.INCORRECT_PASSWORD) 
   }
   const getNewlyGeneratedAccessToken = await generateToken({userId})
   return getNewlyGeneratedAccessToken
-  //Generate token
 }
 
 const userOtpVerification = async (email, userOtp) => {
-  const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
-  if (!getDataAssociatedwithEmail) {
-    throw new Error({
-      code: 401,
-      message: `Email does not exsist`
-    })
-  }
-  else {
-    const { generated_otp, userId } = getDataAssociatedwithEmail[0]
-    console.log(`This is generated Otp`, generated_otp)
-    if (generated_otp == userOtp) {
-      const payload = {
-        isVerified: 1
-      }
-      const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', payload, `email = "${email}"`)
-      const getNewlyGeneratedAccessToken = await generateToken({userId})
-      return getNewlyGeneratedAccessToken
-    } else {
-      throw new Error({
-        code: 401,
-        message: `Incorrect otp`
-      })
+  try {
+    const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
+    if (!getDataAssociatedwithEmail) {
+      throw new Error(ErrorTypes.INVALID_LOGIN)
     }
+    else {
+      const { generated_otp, userId } = getDataAssociatedwithEmail[0]
+      if (generated_otp == userOtp) {
+        const payload = {
+          isVerified: 1
+        }
+        const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', payload, `email = "${email}"`)
+        const getNewlyGeneratedAccessToken = await generateToken({userId})
+        return getNewlyGeneratedAccessToken
+      } else {
+        throw new Error(ErrorTypes.INCORRECT_OTP)
+      }
+    }
+  } catch (error) {
+    throw new Error(ErrorTypes.SQL_ERROR)
   }
 }
 
@@ -107,10 +90,8 @@ const verifyUser = async (req, res, next) => {
       try {
         const bearer = bearerHeader.split(' ');
         const bearerToken = bearer[1];
-        console.log(`This is bearerToken:`, bearerToken)
         // Verify token
         const tokenVerficiation = await verifyToken(bearerToken)
-        console.log(`This is token Verfication Response:`, tokenVerficiation)
         //TODO: Use res.locals
         req.headers.userId =  tokenVerficiation.userId
         next();
