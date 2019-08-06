@@ -31,16 +31,12 @@ const { createrUser, signInUser, userOtpVerification} = require('./../helpers/au
         }
       },
       resolve: async (parent, args, context) => {
-        try {
-          const { email, password } = args.body
-          const newlyCreatedUser = await createrUser(email, password)
-          return {
-            success: true, 
-            userId: newlyCreatedUser.generateUserId,
-            email: newlyCreatedUser.email
-          }
-        } catch (error) {
-          console.error(`Confirming that there is an error:`, error)
+        const { email, password } = args.body
+        const newlyCreatedUser = await createrUser(email, password)
+        return {
+          success: true, 
+          userId: newlyCreatedUser.generateUserId,
+          email: newlyCreatedUser.email
         }
       }
     },

@@ -23,7 +23,7 @@ const responseTime = require('response-time')
 // verifyUser 
 const {verifyUser} = require('./src/helpers/auth')
 const asyncHandler = require('express-async-handler')
-
+const errorFormater = require('./src/helpers/errorFixer')
 // Checking if path access and if not creating a path for logs
 fs.stat(logDirectory, (err, stats) => {
   if (err) {
@@ -58,7 +58,17 @@ app.use(responseTime())
 app.use("/auth", (req, res) => graphqlHTTP({
   schema: authSchema, //TODO: Change it authentication once it is ready
   graphiql: true,
-  context: {req, res}
+  context: {req, res},
+  customFormatErrorFn: error => { 
+    const { message, status } = errorFormater(error.message)
+    return {
+    code: status,
+    message: message,
+    locations: error.locations,
+    stack: error.stack ? error.stack.split('\n') : [],
+    path: error.path,
+    }
+  }
 })(req, res)) 
 
 app.use(verifyUser)
@@ -70,9 +80,11 @@ app.use("/user", async(req, res) => graphqlHTTP({
   context: {req, res},
   customFormatErrorFn: error => ({
     message: error.message,
-    code: error.code
+    locations: error.locations,
+    stack: error.stack ? error.stack.split('\n') : [],
+    path: error.path,
   })
-})(req, res))
+}))
 
 // Just the test api endpoint to test services and configuration 
 // TODO: remove it.

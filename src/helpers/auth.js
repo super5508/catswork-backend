@@ -34,13 +34,8 @@ const createrUser = async (email, password) => {
     password: hashedPassword, 
     email: email
   }
-  try {
   const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
   return {generateUserId, email}
-  } catch (error) {
-    console.error(`Problem In Adding Data in Databse`, error)
-    throw new Error(ErrorTypes.SQL_ERROR)
-  }
 }
 
 const signInUser = async (email, passwordEntered, token) => {
@@ -61,7 +56,6 @@ const signInUser = async (email, passwordEntered, token) => {
 }
 
 const userOtpVerification = async (email, userOtp) => {
-  try {
     const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
     if (!getDataAssociatedwithEmail) {
       throw new Error(ErrorTypes.INVALID_LOGIN)
@@ -79,10 +73,8 @@ const userOtpVerification = async (email, userOtp) => {
         throw new Error(ErrorTypes.INCORRECT_OTP)
       }
     }
-  } catch (error) {
-    throw new Error(ErrorTypes.SQL_ERROR)
-  }
-}
+  } 
+
 
 const verifyUser = async (req, res, next) => {
     const bearerHeader = req.headers['authorization'];

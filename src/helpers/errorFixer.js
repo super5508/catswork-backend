@@ -1,4 +1,4 @@
-const sendError = (error) => {
+const errorFormater = (error) => {
   if (error.includes("/")) {
     const status = parseInt(error.split("/")[0]) ? parseInt(error.split("/")[0]) : 500
     const message = error.split("/")[1] ? error.split("/")[1] : 'Server Error'
@@ -6,4 +6,4 @@ const sendError = (error) => {
   }
 }
 
-module.exports = sendError
+module.exports = errorFormater
