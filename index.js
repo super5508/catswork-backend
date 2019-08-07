@@ -24,6 +24,8 @@ const {verifyUser} = require('./src/helpers/auth')
 const asyncHandler = require('express-async-handler')
 const errorFormater = require('./src/helpers/errorFixer')
 const cookieParser = require('cookie-parser')
+//SQL
+const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./src/helpers/sql')
 // Checking if path access and if not creating a path for logs
 fs.stat(logDirectory, (err, stats) => {
   if (err) {
@@ -57,8 +59,17 @@ app.use(cookieParser())
 app.use(responseTime())
 
 //TODO Creating status api route because of previous backend and frontend requires it -> Not optimal 
-app.get('/api/status', (req, res) => {
-
+app.get('/api/status', verifyUser, async (req, res) => {
+    const userId = res.locals
+    console.log(userId)
+    const {email, ActiveStep} = await getSelectedThingFromTable('CatsWork_authentication','userId', `"${userId}"`)
+    const payload = {
+      email, 
+      activeStep, 
+      userId
+    }
+    console.log(payload)
+    res.status(200).json({payload})
 })
 
 app.use("/auth", (req, res) => graphqlHTTP({

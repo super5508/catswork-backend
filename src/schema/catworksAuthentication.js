@@ -28,7 +28,7 @@ const userAuthenticationType = new GraphQLObjectType({
     generated_otp: {
       type: GraphQLInt
     },
-    isVerified: {
+    ActiveStep: {
       type: GraphQLInt
     },
     createdAt: {

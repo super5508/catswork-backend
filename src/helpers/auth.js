@@ -48,10 +48,10 @@ const signInUser = async (email, passwordEntered, token) => {
     throw new Error(ErrorTypes.INCORRECT_PASSWORD) 
   }
   const getNewlyGeneratedAccessToken = await generateToken({userId})
-  // const cookie = req.cookies.cookieName;
-  // if (cookie === undefined){
-  //   res.cookie('userId', getNewlyGeneratedAccessToken);
-  // }
+  const cookie = req.cookies.cookieName;
+  if (cookie === undefined){
+    res.cookie('userId', getNewlyGeneratedAccessToken);
+  }
   return {userId, getNewlyGeneratedAccessToken}
 }
 
@@ -61,10 +61,12 @@ const userOtpVerification = async (email, userOtp) => {
       throw new Error(ErrorTypes.INVALID_LOGIN)
     }
     else {
-      const { generated_otp, userId } = getDataAssociatedwithEmail[0]
+      const { generated_otp, userId, ActiveStep} = getDataAssociatedwithEmail[0]
+      if (ActiveStep !== 0)  throw new Error(ErrorTypes.USER_VERFIED)
+      //TODO: 
       if (generated_otp == userOtp) {
         const payload = {
-          isVerified: 1
+          activeStep: 1,
         }
         const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', payload, `email = "${email}"`)
         const getNewlyGeneratedAccessToken = await generateToken({userId})
