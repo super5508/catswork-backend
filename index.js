@@ -15,7 +15,6 @@ const helmet = require('helmet')
 const query = require('./src/helpers/sql')
 //Jwt setup
 const jwtConfig = require('./src/helpers/jwt')
-const tempRoutes = require('./src/tempRoutes/auth')
 const bodyParser = require('body-parser')
 // Path of log directors
 const logDirectory = path.join(__dirname, "logs");
@@ -49,12 +48,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("combined", { stream: stream }))
 app.use(helmet())
-// Setting cors 
-app.use(cors());
+// Setting cors  
+// TODO: Parsing cookies because frontends expect cookie, suggestion change it to the 
+app.use(cors({origin: 'http://localhost:8080', credentials: true}))
+app.use(cookieParser())
 // app.use(express.cookieParser())
 //For tracking responsive time (in headers)
 app.use(responseTime())
-// app.use('/auth', tempRoutes)
+
+//TODO Creating status api route because of previous backend and frontend requires it -> Not optimal 
+app.get('/api/status', (req, res) => {
+
+})
 
 app.use("/auth", (req, res) => graphqlHTTP({
   schema: authSchema, //TODO: Change it authentication once it is ready

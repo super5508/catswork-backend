@@ -10,6 +10,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
+ Date: 07/08/2019 13:48:50
 */
 
 SET NAMES utf8mb4;
@@ -28,8 +29,10 @@ CREATE TABLE `CatsWork_authentication` (
   `isVerified` tinyint(1) NOT NULL DEFAULT '0',
   `updatedAt` datetime(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
   `createdAt` datetime(6) NOT NULL,
+  `linkedinRefreshToken` varchar(1000) DEFAULT NULL,
+  `activeStep` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for CatsWork_dashboard

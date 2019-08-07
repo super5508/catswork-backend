@@ -77,15 +77,13 @@ const userOtpVerification = async (email, userOtp) => {
 
 
 const verifyUser = async (req, res, next) => {
-    const bearerHeader = req.headers['authorization'];
-    if(typeof bearerHeader !== 'undefined') {
+    const token = req.cookies.token
+    if(token) {
       try {
-        const bearer = bearerHeader.split(' ');
-        const bearerToken = bearer[1];
         // Verify token
-        const tokenVerficiation = await verifyToken(bearerToken)
+        const tokenVerficiation = await verifyToken(token)
         //TODO: Use res.locals
-        req.headers.userId =  tokenVerficiation.userId
+        res.locals = tokenVerficiation.userId
         next()
       } catch (error) {
         console.error(error)
