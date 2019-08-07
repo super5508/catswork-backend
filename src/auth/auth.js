@@ -1,9 +1,9 @@
 const  bcrypt  =  require('bcryptjs'); 
-const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./sql')
-const { genrateRandomNumber } = require('./others')
-const { generateToken, verifyToken } = require('./jwt')
-const ErrorTypes = require('./../enums/errorTypes')
-const sendEmail = require('./emailer')
+const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('../helpers/sql')
+const { genrateRandomNumber } = require('../helpers/others')
+const { generateToken, verifyToken } = require('../helpers/jwt')
+const ErrorTypes = require('../enums/errorTypes')
+const sendEmail = require('../helpers/emailer')
 const saltRounds = 10;
 
 
@@ -92,7 +92,7 @@ const verifyUser = async (req, res, next) => {
         return res.status(401).send(`Invalid Access token`)
       }
     } else { 
-     return res.status(401).send(`Not Authorized to view this`)
+     return res.status(401).send(`Not Authorized to view this.`)
     }
 }
 

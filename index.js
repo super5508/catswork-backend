@@ -2,8 +2,11 @@
 const express = require('express')
 const app = express();
 const graphqlHTTP = require("express-graphql")
+//Schema
 const userSchema = require('./src/schema/user')
 const authSchema = require('./src/schema/auth')
+//routes 
+const auth = require('./src/routes/auth')
 const mysql = require('mysql');
 const config = require('./src/config.js')
 const morgan = require('morgan')
@@ -20,13 +23,15 @@ const bodyParser = require('body-parser')
 const logDirectory = path.join(__dirname, "logs");
 const responseTime = require('response-time')
 // verifyUser 
-const {verifyUser} = require('./src/helpers/auth')
+const {verifyUser} = require('./src/auth/auth')
 const asyncHandler = require('express-async-handler')
 const errorFormater = require('./src/helpers/errorFixer')
 const cookieParser = require('cookie-parser')
 //SQL
 const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./src/helpers/sql')
 // Checking if path access and if not creating a path for logs
+
+
 fs.stat(logDirectory, (err, stats) => {
   if (err) {
     console.info(`Log Directory Does not exsist, Creating directory`)
@@ -58,6 +63,8 @@ app.use(cookieParser())
 //For tracking responsive time (in headers)
 app.use(responseTime())
 
+app.use('/auth', auth)
+
 //TODO Creating status api route because of previous backend and frontend requires it -> Not optimal 
 app.get('/api/status', verifyUser, async (req, res) => {
     const userId = res.locals
@@ -72,7 +79,8 @@ app.get('/api/status', verifyUser, async (req, res) => {
     res.status(200).json({payload})
 })
 
-app.use("/auth", (req, res) => graphqlHTTP({
+
+app.use("/GraphAuth", (req, res) => graphqlHTTP({
   schema: authSchema, //TODO: Change it authentication once it is ready
   graphiql: true,
   context: {req, res},
@@ -99,7 +107,6 @@ app.use("/user", async  (req, res) => graphqlHTTP({
   graphiql: true,
   context: {req, res},
   customFormatErrorFn: error => { 
-    console.error(`GraphQL Error:`, error)
     const { message, status } = errorFormater(error.message)
     return {
     code: status, 
@@ -111,15 +118,8 @@ app.use("/user", async  (req, res) => graphqlHTTP({
   }
 })(req, res)) 
 
-// Just the test api endpoint to test services and configuration 
-// TODO: remove it.
-app.get('/test', async (req, res) => {
-  const resultFromQuery = await deleteSelectedFieldFromSql('CatsWork_personal', "school", "'ryan'")
-  console.log(`Result from Query:`,  resultFromQuery)
-  res.status(200).json(resultFromQuery[0])
-});
 
 //Listen to specific post 
-app.listen(4000, () => {
-  console.log("Listening for request on port 4000")
+app.listen(config.SERVER_PORT, () => {
+  console.log(`Listening for request on port ${config.SERVER_PORT}`)
 });

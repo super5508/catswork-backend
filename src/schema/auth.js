@@ -8,7 +8,7 @@ const {
   GraphQLNonNull,
   GraphQLBoolean,
  } = graphql
-const { createrUser, signInUser, userOtpVerification} = require('./../helpers/auth')
+const { createrUser, signInUser, userOtpVerification} = require('./../auth/auth')
  const {userAuthenticationType, successType,  userSignupAndLoginType, emailVerificationType, accessTokenGeneration} = require('./catworksAuthentication')
  const { getSelectedThingFromTable,  updateFieldInTable,  deleteSelectedRow} = require('../helpers/sql')
  const util = require('util')

@@ -1,9 +1,13 @@
 const router = require('express').Router()
-const { signInUser,  createrUser, verifyUser, userOtpVerification } = require('../helpers/auth')
+const { signInUser,  createrUser, verifyUser, userOtpVerification } = require('./../auth/auth')
+const GoogleSignIn = require('./../auth/Google')
+
+
 
 router.get('/temp', async(req, res) => {
   res.send('temp route working')
 })
+
 
 router.post('/register', async (req, res) => {
   console.log(req.body)
@@ -43,6 +47,20 @@ router.post('/verifyUser', async (req, res) => {
   }
 })
 
+//TODO: IF doing multiple logging in the map it for seevices 
+const intializeGoogleClass = new GoogleSignIn()
+router.get('/google', async (req, res) => {
+  intializeGoogleClass.createAuthenticationUrl()
+})
+
+router.get('/', async (req, res) => {
+  console.log(`Reached Google Callback`)
+  const tokens = await intializeGoogleClass.getTokenFromAuthorizationCode(req)
+  console.log(`These are tokens:`, tokens)
+  const userInfo = await intializeGoogleClass.getUserInfo(tokens.accessToken)
+  console.log(`This is userInfo:`, userInfo)
+
+})
 router.get('/sampleAuthtestRoute', verifyUser, (req, res) => {
   console.log(`This is req headers userid ${req.headers.userId}`)
   res.send(req.headers.userId)
