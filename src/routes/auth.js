@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { signInUser,  createrUser, verifyUser, userOtpVerification, googleAuth } = require('./../auth/auth')
 const GoogleSignIn = require('./../auth/Google')
-
+const config = require('./../config')
 
 // NOTE: Not using 
 router.get('/temp', async(req, res) => {
@@ -10,28 +10,24 @@ router.get('/temp', async(req, res) => {
 
 // NOTE: Not using 
 router.post('/register', async (req, res) => {
-  console.log(req.body)
   const email = req.body.email
   const password = req.body.password
   try {
     const createdUserToken = await createrUser(email, password)
     res.send(createdUserToken)
   } catch (err) {
-    console.error(err)
     res.status(500).send(JSON.parse(JSON.stringify(err)))
   }
 })
 
 // NOTE: Not using 
 router.post('/login', async (req, res) => {
-  console.log(req.body)
   const email = req.body.email
   const password = req.body.password
   try {
     const createdUserToken = await signInUser(email, password)
     res.send(createdUserToken)
   } catch (err) {
-    console.error(err)
     res.status(500).send(JSON.parse(JSON.stringify(err)))
   }
 })
@@ -44,7 +40,6 @@ router.post('/verifyUser', async (req, res) => {
     const createdUserToken = await userOtpVerification(email, otp)
     res.status(500).send(createdUserToken)
   } catch (err) {
-    console.error(err)
     res.status(500).send(JSON.parse(JSON.stringify(err)))
   }
 })
@@ -55,13 +50,14 @@ router.get('/google', async (req, res) => {
   res.redirect(intializeGoogleClass.createAuthenticationUrl())
 })
 
-router.get('/google/callback', async (req, res) => {
+router.get('/google/callback', async (req, res, next) => {
   const tokens = await intializeGoogleClass.getTokenFromAuthorizationCode(req)
   //TODO: Email Gives name as well
   //TODO: Since we aren't doing anything with google info, we don't need to store tokens 
   const { email } = await intializeGoogleClass.getUserInfo(tokens.accessToken)
-  const getAccessToken = await googleAuth(email)
-  res.redirect('/')
+  console.log(email)
+  const getActiveState = await googleAuth(req, res, email)
+  res.redirect(config.BASE_CLIENT_URL)
 })
 
 // NOTE: Not using 

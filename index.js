@@ -56,7 +56,7 @@ app.use(morgan("combined", { stream: stream }))
 app.use(helmet())
 // Setting cors  
 // TODO: Parsing cookies because frontends expect cookie, suggestion change it to the 
-app.use(cors())
+app.use(cors({credentials: true, origin: 'http://localhost:8080'}))
 app.use(cookieParser())
 // app.use(express.cookieParser())
 //For tracking responsive time (in headers)
@@ -68,7 +68,8 @@ app.use('/auth', auth)
 app.get('/api/status', verifyUser, async (req, res) => {
     const userId = res.locals
     console.log(userId)
-    const {email, ActiveStep} = await getSelectedThingFromTable('CatsWork_authentication','userId', `"${userId}"`)
+    const dataFromTable = await getSelectedThingFromTable('CatsWork_authentication','userId', `"${userId}"`)
+    const {email, activeStep} = dataFromTable[0]
     const payload = {
       email, 
       activeStep, 

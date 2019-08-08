@@ -21,6 +21,7 @@ NODE_EMAILER_PASSWORD: process.env.NODE_EMAILER_PASSWORD || 'password',
 BASE_URL: `http://localhost:${process.env.PORT ? parseInt(process.env.PORT) : 7007}/`,
 GOOGLE_CLIENT_API_KEY: process.env.GOOGLE_CLIENT_ID || '',
 GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_ID_SECRET || '',
+BASE_CLIENT_URL: process.env.BASE_CLIENT_URL || 'http://localhost:8080/'
 }
 
 

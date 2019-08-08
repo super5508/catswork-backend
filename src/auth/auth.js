@@ -58,7 +58,7 @@ const signInUser = async (email, passwordEntered, token) => {
 }
 
 
-const googleAuth = async (emailAddress) => {
+const googleAuth = async (req, res, email) => {
   const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
   if (checkIfEmailExsist[0]) {
     const {userId, ActiveStep} = checkIfEmailExsist[0]
@@ -70,12 +70,12 @@ const googleAuth = async (emailAddress) => {
     const payload = {
       userId: generateUserId, 
       email: email, 
-      payload: enums.activeStep.SET_UP
+      activeStep: enums.activeStep.CONNECT_LINKED_IN
     }
     const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
-    const getNewlyGeneratedAccessToken = await generateToken({userId})
+    const getNewlyGeneratedAccessToken = await generateToken({generateUserId})
     res.cookie('userId', getNewlyGeneratedAccessToken)
-    return getNewlyGeneratedAccessToken
+    return enums.activeStep.SET_UP
   }
 }
 
@@ -88,7 +88,6 @@ const userOtpVerification = async (email, userOtp) => {
     else {
       const { generated_otp, userId, ActiveStep} = getDataAssociatedwithEmail[0]
       if (ActiveStep !== 0)  throw new Error(ErrorTypes.USER_VERFIED)
-      //TODO: 
       if (generated_otp == userOtp) {
         const payload = {
           activeStep: enums.activeStep.SET_UP,
@@ -104,12 +103,11 @@ const userOtpVerification = async (email, userOtp) => {
 
 
 const verifyUser = async (req, res, next) => {
-    const token = req.cookies.token
+    const token = req.cookies.userId
+    console.log(req.cookies)
     if(token) {
       try {
-        // Verify token
         const tokenVerficiation = await verifyToken(token)
-        //TODO: Use res.locals
         res.locals = tokenVerficiation.userId
         next()
       } catch (error) {
@@ -126,6 +124,7 @@ module.exports = {
   createrUser,
   signInUser,
   userOtpVerification,
-  verifyUser
+  verifyUser,
+  googleAuth
 }
 
