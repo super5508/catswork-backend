@@ -5,6 +5,8 @@ const apiKey = config.GOOGLE_CLIENT_API_KEY
 const apiSecretKey = config.GOOGLE_CLIENT_SECRET
 const scope = 'email profile'
 const axios = require('axios')
+const { activeStep } = require('./../enums/commonTypes')
+console.log(apiKey, apiSecretKey)
 class Auth {
   constructor() {
       this.oauth2Client = new OAuth2Client(
@@ -15,7 +17,6 @@ class Auth {
   }
 
   createAuthenticationUrl() {
-      console.log(`redirecting to auth Url`)
       let url = this.oauth2Client.generateAuthUrl({
           access_type: 'offline',
           prompt: 'consent',

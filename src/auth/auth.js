@@ -5,6 +5,7 @@ const { generateToken, verifyToken } = require('../helpers/jwt')
 const ErrorTypes = require('../enums/errorTypes')
 const sendEmail = require('../helpers/emailer')
 const saltRounds = 10;
+const { enums} = require('./../enums/commonTypes')
 
 
 const createRandomNumberNotInTable = async (tableName, location, randomNumberLength) => {
@@ -14,6 +15,7 @@ const createRandomNumberNotInTable = async (tableName, location, randomNumberLen
   else if (!checkIfNumberExsist[0]) return generateNumber
 }
 
+//NOT USING
 const createrUser = async (email, password) => {
   const hashedPassword =  bcrypt.hashSync(password, saltRounds)
   const generateOtp = await createRandomNumberNotInTable('CatsWork_authentication', 'generated_otp', 5)
@@ -22,7 +24,6 @@ const createrUser = async (email, password) => {
   if (checkIfEmailExsist[0]) {
     throw new Error(ErrorTypes.EMAIL_EXISTS)
   }
-
   const sendOtpOverEmail = await sendEmail('irohitbhatia@Outlook.com', 'Auth Verification', `${generateOtp }`)
   const payload = {
     generated_otp: generateOtp,
@@ -34,6 +35,7 @@ const createrUser = async (email, password) => {
   return {generateUserId, email}
 }
 
+//NOT USING
 const signInUser = async (email, passwordEntered, token) => {
   const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
   if (!getDataAssociatedwithEmail) {
@@ -55,6 +57,29 @@ const signInUser = async (email, passwordEntered, token) => {
   return {userId, getNewlyGeneratedAccessToken}
 }
 
+
+const googleAuth = async (emailAddress) => {
+  const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
+  if (checkIfEmailExsist[0]) {
+    const {userId, ActiveStep} = checkIfEmailExsist[0]
+    const getNewlyGeneratedAccessToken = await generateToken({userId})
+    res.cookie('userId', getNewlyGeneratedAccessToken);
+    return getNewlyGeneratedAccessToken
+  } else {
+    const generateUserId = await createRandomNumberNotInTable('CatsWork_authentication','userId', 7)
+    const payload = {
+      userId: generateUserId, 
+      email: email, 
+      payload: enums.activeStep.SET_UP
+    }
+    const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
+    const getNewlyGeneratedAccessToken = await generateToken({userId})
+    res.cookie('userId', getNewlyGeneratedAccessToken)
+    return getNewlyGeneratedAccessToken
+  }
+}
+
+//NOT USING
 const userOtpVerification = async (email, userOtp) => {
     const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
     if (!getDataAssociatedwithEmail) {
@@ -66,7 +91,7 @@ const userOtpVerification = async (email, userOtp) => {
       //TODO: 
       if (generated_otp == userOtp) {
         const payload = {
-          activeStep: 1,
+          activeStep: enums.activeStep.SET_UP,
         }
         const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', payload, `email = "${email}"`)
         const getNewlyGeneratedAccessToken = await generateToken({userId})

@@ -31,7 +31,6 @@ const cookieParser = require('cookie-parser')
 const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./src/helpers/sql')
 // Checking if path access and if not creating a path for logs
 
-
 fs.stat(logDirectory, (err, stats) => {
   if (err) {
     console.info(`Log Directory Does not exsist, Creating directory`)
@@ -57,7 +56,7 @@ app.use(morgan("combined", { stream: stream }))
 app.use(helmet())
 // Setting cors  
 // TODO: Parsing cookies because frontends expect cookie, suggestion change it to the 
-app.use(cors({origin: 'http://localhost:8080', credentials: true}))
+app.use(cors())
 app.use(cookieParser())
 // app.use(express.cookieParser())
 //For tracking responsive time (in headers)
