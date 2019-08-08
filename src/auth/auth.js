@@ -70,13 +70,23 @@ const googleAuth = async (req, res, email) => {
     const payload = {
       userId: generateUserId, 
       email: email, 
-      activeStep: enums.activeStep.CONNECT_LINKED_IN
+      activeStep: enums.activeStep.SET_UP
     }
     const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
     const getNewlyGeneratedAccessToken = await generateToken({generateUserId})
     res.cookie('userId', getNewlyGeneratedAccessToken)
     return enums.activeStep.SET_UP
   }
+}
+
+const linkedinSignUpHandler = async (userId, accessToken) => {
+  const payload = {
+    activeStep: enums.activeStep.ACTIVE,
+    linkedinRefreshToken: `"${accessToken}"`
+  }
+  console.log(payload)
+  const updateAuthenticationInformation = await updateFieldInTable(`CatsWork_authentication`, payload, `userId = ${userId}`)
+  return true
 }
 
 //NOT USING
@@ -104,14 +114,12 @@ const userOtpVerification = async (email, userOtp) => {
 
 const verifyUser = async (req, res, next) => {
     const token = req.cookies.userId
-    console.log(req.cookies)
     if(token) {
       try {
         const tokenVerficiation = await verifyToken(token)
         res.locals = tokenVerficiation.userId
         next()
       } catch (error) {
-        console.error(error)
         return res.status(401).send(`Invalid Access token`)
       }
     } else { 
@@ -120,11 +128,13 @@ const verifyUser = async (req, res, next) => {
 }
 
 
+
 module.exports = {
   createrUser,
   signInUser,
   userOtpVerification,
   verifyUser,
-  googleAuth
+  googleAuth,
+  linkedinSignUpHandler
 }
 

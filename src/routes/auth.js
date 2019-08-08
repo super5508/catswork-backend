@@ -1,7 +1,10 @@
 const router = require('express').Router()
-const { signInUser,  createrUser, verifyUser, userOtpVerification, googleAuth } = require('./../auth/auth')
+const { signInUser,  createrUser, verifyUser, userOtpVerification, googleAuth, linkedinSignUpHandler } = require('./../auth/auth')
 const GoogleSignIn = require('./../auth/Google')
 const config = require('./../config')
+const LinkedinSignIn = require('./../auth/linkedin')
+const intializeGoogleClass = new GoogleSignIn()
+const intializedLinkedInClass = new LinkedinSignIn()
 
 // NOTE: Not using 
 router.get('/temp', async(req, res) => {
@@ -45,18 +48,28 @@ router.post('/verifyUser', async (req, res) => {
 })
 
 //TODO: IF doing multiple logging in the map it for seevices 
-const intializeGoogleClass = new GoogleSignIn()
 router.get('/google', async (req, res) => {
   res.redirect(intializeGoogleClass.createAuthenticationUrl())
 })
 
-router.get('/google/callback', async (req, res, next) => {
+router.get('/google/callback', async (req, res) => {
   const tokens = await intializeGoogleClass.getTokenFromAuthorizationCode(req)
   //TODO: Email Gives name as well
   //TODO: Since we aren't doing anything with google info, we don't need to store tokens 
   const { email } = await intializeGoogleClass.getUserInfo(tokens.accessToken)
   console.log(email)
   const getActiveState = await googleAuth(req, res, email)
+  res.redirect(config.BASE_CLIENT_URL)
+})
+
+router.get('/linkedin', verifyUser, async (req, res) => {
+  res.redirect(intializedLinkedInClass.getAuthorizationUrl())
+})
+
+router.get('/linkedin/callback', verifyUser, async (req, res) => {
+  const userId = res.locals
+  const linkedinInfo = await intializedLinkedInClass.exchangeCode(req.query.code)
+  const updateAuthTable = await linkedinSignUpHandler(userId, linkedinInfo.access_token)
   res.redirect(config.BASE_CLIENT_URL)
 })
 

@@ -54,7 +54,10 @@ const insertIntheTable = (tableName, insertionValues) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
-      if (insertionValues) insertionValues = setValuesForInsertion(insertionValues)
+      if (insertionValues) {
+        insertionValues = setValuesForInsertion(insertionValues)
+        console.log(insertionValues)
+      }
       console.log(`This is insertion Values:`, insertionValues)
       const query = `INSERT INTO ${tableName} ${insertionValues}`
       connection.query(query, (err, response) => {
@@ -86,7 +89,10 @@ const updateFieldInTable = (tableName, updatedQuery, condition) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
-      if (updatedQuery) updatedQuery = setValuesForMutation(updatedQuery)
+      if (updatedQuery) {
+        updatedQuery = setValuesForMutation(updatedQuery)
+        console.log(updatedQuery)
+      }
       const query = `UPDATE ${tableName} SET ${updatedQuery} WHERE ${condition}`
       connection.query(query, (err, response) => {
         connection.destroy()
@@ -129,7 +135,7 @@ const setValuesForMutation = (valuePassed) => {
       const key =  x.trim()
       if (!readOnlyValues[key]) {
         let value = null
-        if (typeof valuePassed[x] === "string") value = valuePassed[x].trim()
+        if (typeof valuePassed[x] === "string") value = valuePassed[x]
         newQuery = newQuery + x + '=' + valuePassed[x] + ','
       }
     }
