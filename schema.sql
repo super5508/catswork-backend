@@ -1,5 +1,4 @@
 /*
- Navicat Premium Data Transfer
 
  Source Server         : root
  Source Server Type    : MySQL
@@ -11,6 +10,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
+ Date: 10/08/2019 02:46:21
 */
 
 SET NAMES utf8mb4;
@@ -79,5 +79,34 @@ CREATE TABLE `CatsWork_personal` (
   `updatedAt` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Table structure for catworks_activity
+-- ----------------------------
+DROP TABLE IF EXISTS `Catworks_activity`;
+CREATE TABLE `Catworks_activity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `activityCustom` varchar(255) DEFAULT NULL,
+  `activity` tinyint(11) DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
+  `updatedAt` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `status` tinyint(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Table structure for catworks_notfication
+-- ----------------------------
+DROP TABLE IF EXISTS `Catworks_notfication`;
+CREATE TABLE `Catworks_notfication` (
+  `id` tinyint(11) NOT NULL,
+  `userId` tinyint(11) NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `activity` tinyint(11) DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
+  `updatedAt` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
