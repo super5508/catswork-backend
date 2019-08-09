@@ -40,8 +40,8 @@ const {
     major: {
       type: GraphQLString
     },
-    industryInterest: {
-      type: industryType
+    desiredIndustry: {
+      type: GraphQLString
     },
     school: {
       type: GraphQLString
@@ -86,8 +86,8 @@ const userPersonalInputType =  new GraphQLInputObjectType({
     major: {
       type: GraphQLString
     },
-    industryInterest: {
-      type: industryType
+    desiredIndustry: {
+      type: GraphQLString
     },
     school: {
       type: GraphQLString
@@ -101,9 +101,6 @@ const userPersonalInputType =  new GraphQLInputObjectType({
 const userCreationlInputType =  new GraphQLInputObjectType({
   name: 'userCreationInputType',
   fields: () => ({
-    id: {
-      type: GraphQLInt
-    },
     gradMonth: {
       type: MonthType
     },
@@ -119,8 +116,8 @@ const userCreationlInputType =  new GraphQLInputObjectType({
     major: {
       type: GraphQLString
     },
-    industryInterest: {
-      type: industryType
+    desiredIndustry: {
+      type: GraphQLString
     },
     school: {
       type: GraphQLString

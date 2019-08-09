@@ -4,6 +4,8 @@ const graphql = require("graphql")
 const { 
   GraphQLEnumType,
   GraphQLObjectType,
+  GraphQLBoolean,
+  GraphQLInt
 } = graphql
 
 
@@ -128,6 +130,18 @@ const activeStep = {
 	ADMIN: 4
 }
 
+const requestSuccess = new GraphQLObjectType({
+  name: 'request_success', 
+  fields: () => ({
+    success: {
+      type: GraphQLBoolean
+    },
+    userId: {
+      type: GraphQLInt
+    }
+  })
+})
+
 
 
 module.exports = {
@@ -136,5 +150,6 @@ module.exports = {
   GenderType,
   enums: {
     activeStep
-  }
+  },
+  requestSuccess
 }

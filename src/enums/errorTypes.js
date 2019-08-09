@@ -10,7 +10,8 @@ const ErrorTypes = {
   UNVERIFIED_EMAIL: "401/unverified-email",
   AUTHENTICATION_OTP_MESSSGE_PROBLEM: '500/unable-to-send-authentication-message',
   SQL_ERROR: `500/problem-crating-new-user`, 
-  INCORRECT_OTP: '400/Incorrect-otp-entered'
+  INCORRECT_OTP: '400/Incorrect-otp-entered',
+  USER_INFO_EXSIST: '422/user-info-already-exsist' // Can't add new user, edit user
 }
 
 module.exports = ErrorTypes

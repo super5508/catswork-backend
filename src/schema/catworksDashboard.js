@@ -89,7 +89,7 @@ const userDashboardInputType =  new GraphQLInputObjectType({
       type: GraphQLString
     },
     industry: {
-      type: industryType //TODO: int in the sql, mapping it to in industry interested -> change in SQL
+      type: GraphQLString //TODO: int in the sql, mapping it to in industry interested -> change in SQL
     }, 
     phoneNumber: {
       type: GraphQLInt

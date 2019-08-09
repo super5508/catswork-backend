@@ -75,7 +75,6 @@ app.get('/api/status', verifyUser, async (req, res) => {
       activeStep, 
       userId
     }
-    console.log(payload)
     res.status(200).json({payload})
 })
 
@@ -99,14 +98,13 @@ app.use("/GraphAuth", (req, res) => graphqlHTTP({
   }
 })(req, res)) 
 
-app.use(verifyUser)
-
 // GraphQL setup
-app.use("/user", async  (req, res) => graphqlHTTP({
+app.use("/graphql", verifyUser, async(req, res) => graphqlHTTP({
   schema: userSchema, //TODO: Change it authentication once it is ready
   graphiql: true,
   context: {req, res},
   customFormatErrorFn: error => { 
+    console.error(error)
     const { message, status } = errorFormater(error.message)
     return {
     code: status, 
