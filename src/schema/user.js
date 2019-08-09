@@ -7,6 +7,7 @@ const {requestSuccess} = require('./../enums/commonTypes')
 // Sql Helper Function
 const { getSelectedThingFromTable,  updateFieldInTable,  deleteSelectedRow, insertIntheTable} = require('../helpers/sql')
 const errorTypesEnums = require('./../enums/errorTypes')
+const {enums} = require('./../enums/commonTypes')
 // 
 const { 
   GraphQLObjectType,
@@ -142,7 +143,6 @@ const Mutations = new GraphQLObjectType({
       }, 
       resolve: async (parent, args, context) => {
         const userId = context.res.locals.userId
-        console.log(userId)
         const checkIfUserInformationExsist = await getSelectedThingFromTable('CatsWork_personal', 'userId', `${userId}`)
         if (checkIfUserInformationExsist[0]) {
           console.log(`Nothing exsit`)
@@ -151,6 +151,10 @@ const Mutations = new GraphQLObjectType({
           const payload = {...args.parameter, userId: userId}
           console.log(`This is payload:`, payload)
           const addLinkedinUser = await insertIntheTable('CatsWork_personal', payload)
+          const updateActiveStatus = {
+            activeStep: enums.activeStep.ACTIVE,
+          }
+          const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', updateActiveStatus, `userId = "${userId}"`)
           const returnObj = {
             userId: userId,
             success: true

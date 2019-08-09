@@ -20,31 +20,37 @@ const userDashboardType = new GraphQLObjectType({
     userId: {
       type: GraphQLInt
     },
-    firstName: {
+    first: {
       type: GraphQLString
     },
-    lastName: {
+    last: {
+      type: GraphQLString
+    },
+    email: {
       type: GraphQLString
     },
     company: {
       type: GraphQLString
     },
-    jobTItle: {
+    position: {
       type: GraphQLString
     },
     industry: {
-      type: industryType //TODO: int in the sql, mapping it to in industry interested -> change in SQL
+      type: GraphQLInt //TODO: int in the sql, mapping it to in industry interested -> change in SQL
     }, 
-    phoneNumber: {
+    phone: {
       type: GraphQLInt
     },
     location: {
       type: GraphQLString
     }, 
+    hometown: {
+      type: GraphQLString
+    },
     education: {
       type: GraphQLString
     }, 
-    CirculActivities: { //TODO: Make it small C in SQL dumb and change it here as well
+    extracurriculars: { //TODO: Make it small C in SQL dumb and change it here as well
       type: GraphQLString
     },
     website: {
@@ -54,6 +60,12 @@ const userDashboardType = new GraphQLObjectType({
       type: GraphQLString
     }, 
     createdAt: {
+      type: GraphQLString
+    },
+    source: {
+      type: GraphQLInt
+    },
+    sourceCustom: {
       type: GraphQLString
     },
     updatedAt: {
@@ -76,31 +88,40 @@ const userDashboardInputType =  new GraphQLInputObjectType({
     id: {
       type: GraphQLInt
     },
-    firstName: {
+    userId: {
+      type: GraphQLInt
+    },
+    first: {
       type: GraphQLString
     },
-    lastName: {
+    last: {
+      type: GraphQLString
+    },
+    email: {
       type: GraphQLString
     },
     company: {
       type: GraphQLString
     },
-    jobTItle: {
+    position: {
       type: GraphQLString
     },
     industry: {
-      type: GraphQLString //TODO: int in the sql, mapping it to in industry interested -> change in SQL
+      type: GraphQLInt //TODO: int in the sql, mapping it to in industry interested -> change in SQL
     }, 
-    phoneNumber: {
+    phone: {
       type: GraphQLInt
     },
     location: {
       type: GraphQLString
     }, 
+    hometown: {
+      type: GraphQLString
+    },
     education: {
       type: GraphQLString
     }, 
-    CirculActivities: { //TODO: Make it small C in SQL dumb and change it here as well
+    extracurriculars: { //TODO: Make it small C in SQL dumb and change it here as well
       type: GraphQLString
     },
     website: {
@@ -108,11 +129,14 @@ const userDashboardInputType =  new GraphQLInputObjectType({
     },
     notes: {
       type: GraphQLString
-    },
+    }, 
     createdAt: {
       type: GraphQLString
     },
-    updatedAt: {
+    source: {
+      type: GraphQLInt
+    },
+    sourceCustom: {
       type: GraphQLString
     }
   })

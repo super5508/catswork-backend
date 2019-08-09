@@ -102,7 +102,7 @@ const userCreationlInputType =  new GraphQLInputObjectType({
   name: 'userCreationInputType',
   fields: () => ({
     gradMonth: {
-      type: MonthType
+      type: GraphQLString
     },
     name: {
       type: new GraphQLNonNull(GraphQLString)
