@@ -38,30 +38,30 @@ const userNotificationsType =  new GraphQLObjectType({
 })
 
 const userNotificationsInputType = new GraphQLInputObjectType({
-name: 'user_notifications_input'
-fields: () => ({
-  id: {
-    type: GraphQLInt
-  },
-  userId: {
-    type: GraphQLInt
-  },
-  activityCustom: {
-    type: GraphQLString
-  },
-  activity: {
-    type: GraphQLInt
-  },
-  status: {
-    type: GraphQLInt
-  },
-  updatedAt: {
-    type: GraphQLString
-  },
-  createdAt: {
-    type: GraphQLString
-  }
-})
+  name: 'user_notifications_input'
+  fields: () => ({
+    id: {
+      type: GraphQLInt
+    },
+    userId: {
+      type: GraphQLInt
+    },
+    activityCustom: {
+      type: GraphQLString
+    },
+    activity: {
+      type: GraphQLInt
+    },
+    status: {
+      type: GraphQLInt
+    },
+    updatedAt: {
+      type: GraphQLString
+    },
+    createdAt: {
+      type: GraphQLString
+    }
+  })
 })
 
 
