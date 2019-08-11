@@ -8,8 +8,8 @@ const {
 const { getSelectedThingFromTable } = require('../helpers/sql')
 
 
-const userNotificationsType =  new GraphQLObjectType({
-  name: 'user_notifications',
+const userActivityType =  new GraphQLObjectType({
+  name: 'user_activity',
   fields: () => ({
     id: {
       type: GraphQLInt
@@ -17,10 +17,13 @@ const userNotificationsType =  new GraphQLObjectType({
     userId: {
       type: GraphQLInt
     },
-    message: {
+    activityCustom: {
       type: GraphQLString
     },
     activity: {
+      type: GraphQLInt
+    },
+    status: {
       type: GraphQLInt
     },
     updatedAt: {
@@ -32,8 +35,8 @@ const userNotificationsType =  new GraphQLObjectType({
   })
 })
 
-const userNotificationsInputType = new GraphQLInputObjectType({
-  name: 'user_notifications_input',
+const userActivityInputType = new GraphQLInputObjectType({
+  name: 'user_activity_input',
   fields: () => ({
     id: {
       type: GraphQLInt
@@ -41,10 +44,13 @@ const userNotificationsInputType = new GraphQLInputObjectType({
     userId: {
       type: GraphQLInt
     },
-    message: {
+    activityCustom: {
       type: GraphQLString
     },
     activity: {
+      type: GraphQLInt
+    },
+    status: {
       type: GraphQLInt
     },
     updatedAt: {
@@ -58,6 +64,6 @@ const userNotificationsInputType = new GraphQLInputObjectType({
 
 
 module.exports = {
-  userNotificationsType,
-  userNotificationsInputType
+  userActivityType,
+  userActivityInputType
 }

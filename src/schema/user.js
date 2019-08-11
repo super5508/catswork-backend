@@ -8,6 +8,8 @@ const {requestSuccess} = require('./../enums/commonTypes')
 const { getSelectedThingFromTable,  updateFieldInTable,  deleteSelectedRow, insertIntheTable} = require('../helpers/sql')
 const errorTypesEnums = require('./../enums/errorTypes')
 const {enums} = require('./../enums/commonTypes')
+const {userActivityInputType, userActivityType} = require('./catworksActivity')
+const {userNotificationsType, userNotificationsInputType} = require('./catworksNotification')
 // 
 const { 
   GraphQLObjectType,
@@ -49,6 +51,22 @@ const RootQuery = new GraphQLObjectType({
           const userId = context.res.locals.userId
           const userAuthenticationData = await getSelectedThingFromTable('CatsWork_authentication', `userId`, `${userId}`)
           return userAuthenticationData[0]
+        }
+      },
+      catWorksActivity: {
+        type:new GraphQLList (userActivityType),
+        resolve: async (parent, args, context) => {
+          const userId = context.res.locals.userId
+          const userActivityData = await getSelectedThingFromTable('CatsWork_activity', `userId`, `${userId}`)
+          return userActivityData[0]
+        }
+      },
+      catWorksNotification: {
+        type:new GraphQLList (userNotificationsType),
+        resolve: async (parent, args, context) => {
+          const userId = context.res.locals.userId
+          const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId`, `${userId}`)
+          return userNotificationDataa[0]
         }
       }
     }
@@ -161,6 +179,104 @@ const Mutations = new GraphQLObjectType({
           }
           return returnObj
         }
+      }
+    },
+    AddNewActivity: {
+      type: requestSuccess,
+      args: { 
+        parameter: {
+          type: userActivityInputType
+        }
+      }, 
+      resolve: async (parent, args, context) => {
+        const userId = context.res.locals.userId
+        const payload = {...args.parameter, userId: userId}
+        const insertActivityInTable = await insertIntheTable('CatsWork_activity', payload)
+        const returnObj = {
+          userId: userId,
+          success: true
+        }
+        return returnObj
+      }
+    },
+    updateActivity: {
+      type: requestSuccess,
+      args: { 
+        parameter: {
+          type: userActivityInputType
+        },
+        id: {
+          type: new GraphQLNonNull(GraphQLInt)
+        }
+      }, 
+      resolve: async (parent, args, context) => {
+        const userId = context.res.locals.userId
+        const payload = {...args.parameter}
+        console.log(`This is payload:`, payload)
+        const updateActivityInTable = await updateFieldInTable('CatsWork_activity', payload, `id = ${args.id} AND userId = ${userId}`)
+        const returnObj = {
+          userId: userId,
+          success: true
+        }
+        return returnObj
+      }
+    },
+    DeleteActivity: { //returns true if the query is deleted
+      type: requestSuccess,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLInt)
+        }
+      },
+      resolve: async (parent, args, context) => {
+        //Create function to delete entire row from the dashboard
+        const id =  args.id
+        const userId = context.res.locals.userId
+        //TODO: Include UserID as well here
+        const deleteSelectedRecord = await deleteSelectedRow(`CatsWork_activity`, `id`,  id)
+        const returnObj = {
+          userId: userId,
+          success: true
+        }
+        return returnObj
+      }
+    },
+    addNotification: {
+      type: requestSuccess,
+      args: { 
+        parameter: {
+          type: userNotificationsInputType
+        }
+      }, 
+      resolve: async (parent, args, context) => {
+        const userId = context.res.locals.userId
+        const payload = {...args.parameter, userId: userId}
+        const insertNotificationInTable = await insertIntheTable('CatsWork_notification', payload)
+        const returnObj = {
+          userId: userId,
+          success: true
+        }
+        return returnObj
+      }
+    },
+    DeleteNotification: { //returns true if the query is deleted
+      type: requestSuccess,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLInt)
+        }
+      },
+      resolve: async (parent, args, context) => {
+        //Create function to delete entire row from the dashboard
+        const id =  args.id
+        const userId = context.res.locals.userId
+        //TODO: Include UserID as well here
+        const deleteSelectedRecord = await deleteSelectedRow(`CatsWork_notification`, `id`,  id)
+        const returnObj = {
+          userId: userId,
+          success: true
+        }
+        return returnObj
       }
     }
   }

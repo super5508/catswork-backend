@@ -73,12 +73,13 @@ const googleAuth = async (req, res, email) => {
       activeStep: enums.activeStep.SET_UP
     }
     const insertNewUserInTable = await insertIntheTable('CatsWork_authentication', payload)
-    const getNewlyGeneratedAccessToken = await generateToken({generateUserId})
+    const getNewlyGeneratedAccessToken = await generateToken({userId: generateUserId})
     res.cookie('userId', getNewlyGeneratedAccessToken)
     return enums.activeStep.SET_UP
   }
 }
 
+//Not using
 const linkedinSignUpHandler = async (userId, accessToken) => {
   const payload = {
     activeStep: enums.activeStep.ACTIVE,
@@ -114,10 +115,11 @@ const userOtpVerification = async (email, userOtp) => {
 
 const verifyUser = async (req, res, next) => {
     const token = req.cookies.userId
-    console.log(req.body)
+    console.log(token)
     if(token) {
       try {
         const tokenVerficiation = await verifyToken(token)
+        console.log(`THis is token`, tokenVerficiation)
         res.locals.userId = tokenVerficiation.userId
         console.log(res.locals.userId)
         next()

@@ -84,6 +84,13 @@ const userDashboardType = new GraphQLObjectType({
         const userNotificationData = await getSelectedThingFromTable('catworks_notfication', `userId`, `${parent[0].userId}`)
         return userData[0]
       }
+    },
+    userActivity: {
+      type: require('./catworksActivity').userActivityType,
+      resolve: async(parent, args, request) => {
+        const userNotificationData = await getSelectedThingFromTable('catworks_notfication', `userId`, `${parent[0].userId}`)
+        return userData[0]
+      }
     }
   })
 })
