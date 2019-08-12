@@ -58,15 +58,16 @@ const RootQuery = new GraphQLObjectType({
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
           const userActivityData = await getSelectedThingFromTable('CatsWork_activity', `userId`, `${userId}`)
-          return userActivityData[0]
+          return userActivityData
         }
       },
       catWorksNotification: {
-        type:new GraphQLList (userNotificationsType),
+        type:new GraphQLList(userNotificationsType),
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
           const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId`, `${userId}`)
-          return userNotificationDataa[0]
+          console.log(`this is notificaiton:`, userNotificationData)
+          return userNotificationData
         }
       }
     }
@@ -142,7 +143,7 @@ const Mutations = new GraphQLObjectType({
       }, 
       resolve: async (parent, args, context) => {
         const userId = context.res.locals.userId
-        const payload = {...args.parameter}
+        const payload = {...args.parameter, userId: userId}
         console.log(`This is payload:`, payload)
         const addLinkedinUser = await insertIntheTable('CatsWork_dashboard', payload)
         const returnObj = {

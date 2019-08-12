@@ -11,7 +11,7 @@ const { getSelectedThingFromTable } = require('../helpers/sql')
 const userActivityType =  new GraphQLObjectType({
   name: 'user_activity',
   fields: () => ({
-    id: {
+    activiytId: {
       type: GraphQLInt
     },
     userId: {
@@ -24,6 +24,9 @@ const userActivityType =  new GraphQLObjectType({
       type: GraphQLInt
     },
     status: {
+      type: GraphQLInt
+    },
+    personId: {
       type: GraphQLInt
     },
     updatedAt: {
@@ -42,6 +45,9 @@ const userActivityInputType = new GraphQLInputObjectType({
       type: GraphQLInt
     },
     userId: {
+      type: GraphQLInt
+    },
+    personId: {
       type: GraphQLInt
     },
     activityCustom: {

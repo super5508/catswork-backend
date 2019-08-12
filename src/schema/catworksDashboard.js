@@ -14,7 +14,7 @@ const { getSelectedThingFromTable } = require('../helpers/sql')
 const userDashboardType = new GraphQLObjectType({
   name: 'user_dashboard',
   fields: () => ({
-    id: {
+    personId: {
       type: GraphQLInt
     },
     userId: {
@@ -36,10 +36,10 @@ const userDashboardType = new GraphQLObjectType({
       type: GraphQLString
     },
     industry: {
-      type: GraphQLInt //TODO: int in the sql, mapping it to in industry interested -> change in SQL
+      type: GraphQLString //TODO: int in the sql, mapping it to in industry interested -> change in SQL
     }, 
     phone: {
-      type: GraphQLInt
+      type: GraphQLString
     },
     location: {
       type: GraphQLString
@@ -63,7 +63,7 @@ const userDashboardType = new GraphQLObjectType({
       type: GraphQLString
     },
     source: {
-      type: GraphQLInt
+      type: GraphQLString
     },
     sourceCustom: {
       type: GraphQLString
@@ -97,9 +97,9 @@ const userDashboardType = new GraphQLObjectType({
 
 
 const userDashboardInputType =  new GraphQLInputObjectType({
-  name: 'userDashboadType', 
+  name: 'userDashboadInputType', 
   fields: () => ({
-    id: {
+    personId: {
       type: GraphQLInt
     },
     userId: {
@@ -121,10 +121,10 @@ const userDashboardInputType =  new GraphQLInputObjectType({
       type: GraphQLString
     },
     industry: {
-      type: GraphQLInt //TODO: int in the sql, mapping it to in industry interested -> change in SQL
+      type: GraphQLString //TODO: String here, int in the personal since chrome extsnions pasing int
     }, 
     phone: {
-      type: GraphQLInt
+      type: GraphQLString //TODO: Chrome Extension passing string, change it to int
     },
     location: {
       type: GraphQLString
@@ -135,7 +135,7 @@ const userDashboardInputType =  new GraphQLInputObjectType({
     education: {
       type: GraphQLString
     }, 
-    extracurriculars: { //TODO: Make it small C in SQL dumb and change it here as well
+    extracurriculars: { 
       type: GraphQLString
     },
     website: {
@@ -148,7 +148,7 @@ const userDashboardInputType =  new GraphQLInputObjectType({
       type: GraphQLString
     },
     source: {
-      type: GraphQLInt
+      type: GraphQLString // TODO: In the given Backend Schema, source is tinyInt but extension sending string
     },
     sourceCustom: {
       type: GraphQLString
