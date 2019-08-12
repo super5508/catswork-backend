@@ -11,7 +11,7 @@ const { getSelectedThingFromTable } = require('../helpers/sql')
 const userActivityType =  new GraphQLObjectType({
   name: 'user_activity',
   fields: () => ({
-    activiytId: {
+    activityId: {
       type: GraphQLInt
     },
     userId: {
@@ -21,7 +21,7 @@ const userActivityType =  new GraphQLObjectType({
       type: GraphQLString
     },
     activity: {
-      type: GraphQLInt
+      type: GraphQLString //TODO Frontend wants it to be string, given db have it as integer
     },
     status: {
       type: GraphQLInt
@@ -33,6 +33,9 @@ const userActivityType =  new GraphQLObjectType({
       type: GraphQLString
     },
     createdAt: {
+      type: GraphQLString
+    },
+    date: {
       type: GraphQLString
     }
   })
@@ -41,7 +44,7 @@ const userActivityType =  new GraphQLObjectType({
 const userActivityInputType = new GraphQLInputObjectType({
   name: 'user_activity_input',
   fields: () => ({
-    id: {
+    activityId: {
       type: GraphQLInt
     },
     userId: {
@@ -54,7 +57,7 @@ const userActivityInputType = new GraphQLInputObjectType({
       type: GraphQLString
     },
     activity: {
-      type: GraphQLInt
+      type: GraphQLString  //TODO Frontend wants it to be string, given db have it as integer
     },
     status: {
       type: GraphQLInt
@@ -63,7 +66,10 @@ const userActivityInputType = new GraphQLInputObjectType({
       type: GraphQLString
     },
     createdAt: {
-      type: GraphQLString
+      type: GraphQLString 
+    },
+    date: {
+      type: GraphQLString //TODO: In DB we are using varchar. convert the data to timestamp in DB and in extension we are getting data in z format, format it to timestamp format
     }
   })
 })

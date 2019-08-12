@@ -67,9 +67,7 @@ app.use('/auth', auth)
 //TODO Creating status api route because of previous backend and frontend requires it -> Not optimal 
 app.get('/api/status', verifyUser, async (req, res) => {
     const userId = res.locals.userId
-    console.log(`this is userid`, userId)
     const dataFromTable = await getSelectedThingFromTable('CatsWork_authentication','userId', `"${userId}"`)
-    console.log(dataFromTable)
     const {email, activeStep} = dataFromTable[0]
     const payload = {
       email, 

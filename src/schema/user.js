@@ -32,7 +32,6 @@ const RootQuery = new GraphQLObjectType({
             //TODO: Error Handling
             const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId`,  `${userId}`)
             // since there would only be a single user with a userId, hence we aren't using list here and hence we are passing the 0th element
-            console.log(getUserDataFromTable)
             return getUserDataFromTable[0]
           }
       }, 
@@ -43,6 +42,22 @@ const RootQuery = new GraphQLObjectType({
           // THis is a list, hence don't need to pass the 0th element
           const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `userId`, `${userId}`)
           return userDashboardData
+        }
+      },
+      catWorksSingleDashboardUser: {
+        type: userDashboardType, 
+        args: {
+          id: {
+            type: GraphQLInt
+          }
+        },
+        resolve: async (parent, args, context) => {
+          const userId = context.res.locals.userId
+          // THis is a list, hence don't need to pass the 0th element
+          console.log(`personId,`, args.id)
+          const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `personId`, `${args.id}`)
+          console.log(`Single User Dashboard Data`, userDashboardData)
+          return userDashboardData[0]
         }
       },
       catWorksAuthentication: { // TODO: Verify if user authentication needs to be here
@@ -57,7 +72,7 @@ const RootQuery = new GraphQLObjectType({
         type:new GraphQLList (userActivityType),
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
-          const userActivityData = await getSelectedThingFromTable('CatsWork_activity', `userId`, `${userId}`)
+          const userActivityData = await getSelectedThingFromTable('catworks_activity', `userId`, `${userId}`)
           return userActivityData
         }
       },
@@ -65,6 +80,7 @@ const RootQuery = new GraphQLObjectType({
         type:new GraphQLList(userNotificationsType),
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
+          console.log(`This is userId:`, userId)
           const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId`, `${userId}`)
           console.log(`this is notificaiton:`, userNotificationData)
           return userNotificationData
@@ -92,7 +108,8 @@ const Mutations = new GraphQLObjectType({
         const updateDashBoardInformation = await updateFieldInTable(`CatsWork_dashboard`, args.parameter, `id = ${args.id} AND userId = ${userId}`)
         const returnObj = {
           userId: userId,
-          success: true
+          success: true,
+          id: updateDashBoardInformation.id
         }
         return returnObj
       }
@@ -106,10 +123,11 @@ const Mutations = new GraphQLObjectType({
       }, 
       resolve: async (parent, args, context) => {
         const userId = context.res.locals.userId
-        const updateDashBoardInformation =  await updateFieldInTable(`CatsWork_personal`, args.parameter, `userId = ${userId}`)
+        const updatePersonalInformation =  await updateFieldInTable(`CatsWork_personal`, args.parameter, `userId = ${userId}`)
         const returnObj = {
           userId: userId,
-          success: true
+          success: true,
+          id: updatePersonalInformation.id
         }
         return returnObj
       }
@@ -144,11 +162,11 @@ const Mutations = new GraphQLObjectType({
       resolve: async (parent, args, context) => {
         const userId = context.res.locals.userId
         const payload = {...args.parameter, userId: userId}
-        console.log(`This is payload:`, payload)
         const addLinkedinUser = await insertIntheTable('CatsWork_dashboard', payload)
         const returnObj = {
           userId: userId,
-          success: true
+          success: true,
+          id: addLinkedinUser.insertId
         }
         return returnObj
       }
@@ -168,7 +186,6 @@ const Mutations = new GraphQLObjectType({
           throw new Error(errorTypesEnums.USER_INFO_EXSIST)
         } else {
           const payload = {...args.parameter, userId: userId}
-          console.log(`This is payload:`, payload)
           const addLinkedinUser = await insertIntheTable('CatsWork_personal', payload)
           const updateActiveStatus = {
             activeStep: enums.activeStep.ACTIVE,
@@ -176,7 +193,8 @@ const Mutations = new GraphQLObjectType({
           const updateIsVerifiedInTable= await updateFieldInTable('CatsWork_authentication', updateActiveStatus, `userId = "${userId}"`)
           const returnObj = {
             userId: userId,
-            success: true
+            success: true,
+            id: updateIsVerifiedInTable.insertId
           }
           return returnObj
         }
@@ -187,15 +205,19 @@ const Mutations = new GraphQLObjectType({
       args: { 
         parameter: {
           type: userActivityInputType
+        },
+        id: {
+          type: GraphQLInt
         }
       }, 
       resolve: async (parent, args, context) => {
         const userId = context.res.locals.userId
-        const payload = {...args.parameter, userId: userId}
-        const insertActivityInTable = await insertIntheTable('CatsWork_activity', payload)
+        const payload = {...args.parameter, userId: userId, personId: args.id}
+        const insertActivityInTable = await insertIntheTable('catworks_activity', payload)
         const returnObj = {
           userId: userId,
-          success: true
+          success: true,
+          id: insertActivityInTable.insertId
         }
         return returnObj
       }
@@ -213,11 +235,11 @@ const Mutations = new GraphQLObjectType({
       resolve: async (parent, args, context) => {
         const userId = context.res.locals.userId
         const payload = {...args.parameter}
-        console.log(`This is payload:`, payload)
-        const updateActivityInTable = await updateFieldInTable('CatsWork_activity', payload, `id = ${args.id} AND userId = ${userId}`)
+        const updateActivityInTable = await updateFieldInTable('catworks_activity', payload, `id = ${args.id} AND userId = ${userId}`)
         const returnObj = {
           userId: userId,
-          success: true
+          success: true,
+          id: updateActivityInTable.insertId
         }
         return returnObj
       }
@@ -234,7 +256,7 @@ const Mutations = new GraphQLObjectType({
         const id =  args.id
         const userId = context.res.locals.userId
         //TODO: Include UserID as well here
-        const deleteSelectedRecord = await deleteSelectedRow(`CatsWork_activity`, `id`,  id)
+        const deleteSelectedRecord = await deleteSelectedRow(`catworks_activity`, `id`,  id)
         const returnObj = {
           userId: userId,
           success: true
@@ -255,7 +277,8 @@ const Mutations = new GraphQLObjectType({
         const insertNotificationInTable = await insertIntheTable('CatsWork_notification', payload)
         const returnObj = {
           userId: userId,
-          success: true
+          success: true,
+          id: insertNotificationInTable.insertId
         }
         return returnObj
       }

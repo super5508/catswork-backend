@@ -7,7 +7,8 @@ const {
   GraphQLID,
   GraphQLInt,
   GraphQLInputObjectType,
-  GraphQLNonNull
+  GraphQLNonNull,
+  GraphQLList
 } = graphql
 const { getSelectedThingFromTable } = require('../helpers/sql')
 
@@ -74,22 +75,24 @@ const userDashboardType = new GraphQLObjectType({
     userInformation: {
       type: require('./catworksPersonal').userPersonalType, 
       resolve: async (parent, args, request) => {
-        const userData = await getSelectedThingFromTable('CatsWork_personal', `userId`, `${parent[0].userId}`)
+        const userData = await getSelectedThingFromTable('CatsWork_personal', `userId`, `${parent.userId}`)
         return userData[0]
       }
     }, 
     userNotification: {
       type: require('./catworksNotification').userNotificationsType,
       resolve: async(parent, args, request) => {
-        const userNotificationData = await getSelectedThingFromTable('catworks_notfication', `userId`, `${parent[0].userId}`)
-        return userData[0]
+        console.log(`This is parent`, parent)
+        const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId`, `${parent.userId}`)
+        return userNotificationData[0]
       }
     },
     userActivity: {
-      type: require('./catworksActivity').userActivityType,
+      type: new GraphQLList(require('./catworksActivity').userActivityType),
       resolve: async(parent, args, request) => {
-        const userNotificationData = await getSelectedThingFromTable('catworks_notfication', `userId`, `${parent[0].userId}`)
-        return userData[0]
+        console.log(`Parent User activity`, parent)
+        const userActivityData= await getSelectedThingFromTable('catworks_activity', `userId`, `${parent.userId}`)
+        return userActivityData
       }
     }
   })

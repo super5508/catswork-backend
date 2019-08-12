@@ -85,7 +85,6 @@ const linkedinSignUpHandler = async (userId, accessToken) => {
     activeStep: enums.activeStep.ACTIVE,
     linkedinRefreshToken: `"${accessToken}"`
   }
-  console.log(payload)
   const updateAuthenticationInformation = await updateFieldInTable(`CatsWork_authentication`, payload, `userId = ${userId}`)
   return true
 }

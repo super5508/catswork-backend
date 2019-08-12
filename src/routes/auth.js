@@ -57,7 +57,6 @@ router.get('/google/callback', async (req, res) => {
   //TODO: Email Gives name as well
   //TODO: Since we aren't doing anything with google info, we don't need to store tokens 
   const { email } = await intializeGoogleClass.getUserInfo(tokens.accessToken)
-  console.log(email)
   const getActiveState = await googleAuth(req, res, email)
   res.redirect(config.BASE_CLIENT_URL)
 })
@@ -74,10 +73,6 @@ router.get('/linkedin/callback', verifyUser, async (req, res) => {
 })
 
 // NOTE: Not using 
-router.get('/sampleAuthtestRoute', verifyUser, (req, res) => {
-  console.log(`This is req headers userid ${req.headers.userId}`)
-  res.send(req.headers.userId)
-})
 module.exports = router
 
 

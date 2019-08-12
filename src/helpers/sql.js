@@ -40,6 +40,7 @@ const getSelectedThingFromTable = (tableName, locationReference, locationReferen
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
       const query = `SELECT * FROM ${tableName} WHERE ${locationReference} = ${locationReferenceValue}`
+      console.log(`Query:`,query)
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -54,10 +55,7 @@ const insertIntheTable = (tableName, insertionValues) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
-      if (insertionValues) {
-        insertionValues = setValuesForInsertion(insertionValues)
-        console.log(insertionValues)
-      }
+      if (insertionValues)  insertionValues = setValuesForInsertion(insertionValues)
       console.log(`This is insertion Values:`, insertionValues)
       const query = `INSERT INTO ${tableName} ${insertionValues}`
       connection.query(query, (err, response) => {
@@ -89,10 +87,7 @@ const updateFieldInTable = (tableName, updatedQuery, condition) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
-      if (updatedQuery) {
-        updatedQuery = setValuesForMutation(updatedQuery)
-        console.log(updatedQuery)
-      }
+      if (updatedQuery) updatedQuery = setValuesForMutation(updatedQuery)  
       const query = `UPDATE ${tableName} SET ${updatedQuery} WHERE ${condition}`
       connection.query(query, (err, response) => {
         connection.destroy()

@@ -5,7 +5,8 @@ const {
   GraphQLEnumType,
   GraphQLObjectType,
   GraphQLBoolean,
-  GraphQLInt
+  GraphQLInt,
+  GraphQLString
 } = graphql
 
 
@@ -138,6 +139,9 @@ const requestSuccess = new GraphQLObjectType({
     },
     userId: {
       type: GraphQLInt
+    }, 
+    id: {
+      type: GraphQLString
     }
   })
 })
