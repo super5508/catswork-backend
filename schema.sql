@@ -10,7 +10,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 10/08/2019 02:46:21
+ Date: 12/08/2019 19:32:00
 */
 
 SET NAMES utf8mb4;
@@ -38,14 +38,14 @@ CREATE TABLE `CatsWork_authentication` (
 -- ----------------------------
 DROP TABLE IF EXISTS `CatsWork_dashboard`;
 CREATE TABLE `CatsWork_dashboard` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `personId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
   `first` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `last` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `company` varchar(255) DEFAULT NULL,
   `position` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `industry` int(11) DEFAULT NULL,
+  `industry` varchar(255) DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `location` varchar(255) DEFAULT NULL,
   `education` varchar(255) DEFAULT NULL,
@@ -53,12 +53,28 @@ CREATE TABLE `CatsWork_dashboard` (
   `extracurriculars` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `website` varchar(255) DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,
-  `source` tinyint(6) DEFAULT NULL,
+  `source` varchar(255) DEFAULT NULL,
   `sourceCustom` varchar(300) DEFAULT NULL,
   `createdAt` timestamp(6) NOT NULL,
   `updatedAt` timestamp(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`personId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Table structure for CatsWork_notification
+-- ----------------------------
+DROP TABLE IF EXISTS `CatsWork_notification`;
+CREATE TABLE `CatsWork_notification` (
+  `notificationId` tinyint(11) NOT NULL,
+  `userId` tinyint(11) NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `type` tinyint(11) DEFAULT NULL,
+  `personId` tinyint(11) DEFAULT NULL,
+  `activity` tinyint(11) DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
+  `updatedAt` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`notificationId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for CatsWork_personal
@@ -83,30 +99,18 @@ CREATE TABLE `CatsWork_personal` (
 -- ----------------------------
 -- Table structure for catworks_activity
 -- ----------------------------
-DROP TABLE IF EXISTS `Catworks_activity`;
-CREATE TABLE `Catworks_activity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `catworks_activity`;
+CREATE TABLE `catworks_activity` (
+  `activityId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
+  `personId` int(11) DEFAULT NULL,
   `activityCustom` varchar(255) DEFAULT NULL,
   `activity` tinyint(11) DEFAULT NULL,
-  `createdAt` timestamp NOT NULL,
-  `updatedAt` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `status` tinyint(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ----------------------------
--- Table structure for catworks_notfication
--- ----------------------------
-DROP TABLE IF EXISTS `Catworks_notfication`;
-CREATE TABLE `Catworks_notfication` (
-  `id` tinyint(11) NOT NULL,
-  `userId` tinyint(11) NOT NULL,
-  `message` varchar(255) NOT NULL,
-  `activity` tinyint(11) DEFAULT NULL,
+  `date` timestamp NULL DEFAULT NULL,
   `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`activityId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
