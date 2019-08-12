@@ -10,7 +10,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 12/08/2019 19:32:00
+ Date: 13/08/2019 04:08:29
 */
 
 SET NAMES utf8mb4;
@@ -58,7 +58,7 @@ CREATE TABLE `CatsWork_dashboard` (
   `createdAt` timestamp(6) NOT NULL,
   `updatedAt` timestamp(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`personId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for CatsWork_notification
@@ -105,12 +105,12 @@ CREATE TABLE `catworks_activity` (
   `userId` int(11) NOT NULL,
   `personId` int(11) DEFAULT NULL,
   `activityCustom` varchar(255) DEFAULT NULL,
-  `activity` tinyint(11) DEFAULT NULL,
+  `activity` varchar(255) DEFAULT NULL,
   `status` tinyint(11) DEFAULT NULL,
-  `date` timestamp NULL DEFAULT NULL,
+  `date` varchar(255) DEFAULT NULL,
   `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`activityId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
