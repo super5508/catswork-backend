@@ -3,6 +3,8 @@ const errorFormater = (error) => {
     const status = parseInt(error.split("/")[0]) ? parseInt(error.split("/")[0]) : 500
     const message = error.split("/")[1] ? error.split("/")[1] : 'Server Error'
     return { status, message }
+  } else {
+    return
   }
 }
 

@@ -27,7 +27,7 @@ const userNotificationsType =  new GraphQLObjectType({
       type: GraphQLInt
     },
     type: {
-      type: GraphQLInt
+      type: GraphQLString
     },
     updatedAt: {
       type: GraphQLString

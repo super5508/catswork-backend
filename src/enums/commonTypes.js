@@ -146,6 +146,11 @@ const requestSuccess = new GraphQLObjectType({
   })
 })
 
+const EnumNotification = {
+	ADDED_PERSON: 1,
+	COMPLETED_ACTIVITY: 2,
+	SCHEDULED_ACTIVITY: 3
+}
 
 
 module.exports = {
@@ -155,5 +160,6 @@ module.exports = {
   enums: {
     activeStep
   },
-  requestSuccess
+  requestSuccess,
+  EnumNotification
 }

@@ -90,14 +90,12 @@ const userDashboardType = new GraphQLObjectType({
     userActivity: {
       type: new GraphQLList(require('./catworksActivity').userActivityType),
       resolve: async(parent, args, request) => {
-        console.log(`Parent User activity`, parent)
-        const userActivityData= await getSelectedThingFromTable('catworks_activity', `userId = ${parent.userId}`)
+        const userActivityData= await getSelectedThingFromTable('catworks_activity', `userId = ${parent.userId} AND personId = ${parent.personId}`)
         return userActivityData
       }
     }
   })
 })
-
 
 const userDashboardInputType =  new GraphQLInputObjectType({
   name: 'userDashboadInputType', 

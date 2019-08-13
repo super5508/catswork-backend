@@ -207,7 +207,17 @@ const Mutations = new GraphQLObjectType({
       resolve: async (parent, args, context) => {
         const userId = context.res.locals.userId
         const payload = {...args.parameter, userId: userId, personId: args.id}
+        const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId = ${userId}`)
+        const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `personId = ${args.id}`)
         const insertActivityInTable = await insertIntheTable('catworks_activity', payload)
+        const notificationPayload = {
+          userId: userId, 
+          message: `Scheduled ${args.parameter.activity} with ${getUserDataFromTable[0].name} with ${userDashboardData[0].first}`, 
+          personId: args.id, 
+          activity: insertActivityInTable.insertId,
+          type: 'SCHEDULED_ACTIVITY'
+        }
+        const createNotificationInTable = await insertIntheTable('CatsWork_notification', notificationPayload)
         const returnObj = {
           userId: userId,
           success: true,
@@ -233,7 +243,8 @@ const Mutations = new GraphQLObjectType({
         const returnObj = {
           userId: userId,
           success: true,
-          id: updateActivityInTable.insertId
+          id: updateActivityInTable.insertId,
+          notificstionId
         }
         return returnObj
       }

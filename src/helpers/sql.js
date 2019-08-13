@@ -56,7 +56,6 @@ const insertIntheTable = (tableName, insertionValues) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
       if (insertionValues)  insertionValues = setValuesForInsertion(insertionValues)
-      console.log(`This is insertion Values:`, insertionValues)
       const query = `INSERT INTO ${tableName} ${insertionValues}`
       connection.query(query, (err, response) => {
         connection.destroy()
@@ -66,6 +65,7 @@ const insertIntheTable = (tableName, insertionValues) => {
     })
   })
 }
+
 
 // Delete SQL Queries 
 const deleteSelectedRow = (tableName, toDeleteCondition, toDeleteValue) => {

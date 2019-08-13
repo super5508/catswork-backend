@@ -100,8 +100,9 @@ app.use("/graphql", verifyUser, async(req, res) => graphqlHTTP({
   context: {req, res},
   customFormatErrorFn: error => { 
     const errorFormatter = {}
-    if (error.message) {
-      const { message, status } = errorFormater(error.message)
+    const formateError = errorFormater(error.message)
+    if (formateError) {
+      const {message, status} = formateError
       errorFormater.message = message
       errorFormater.status = status
     } else {
