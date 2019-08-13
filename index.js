@@ -6,6 +6,8 @@ const graphqlHTTP = require("express-graphql")
 const userSchema = require('./src/schema/user')
 const authSchema = require('./src/schema/auth')
 //routes 
+const dotenv = require("dotenv");
+dotenv.config();
 const auth = require('./src/routes/auth')
 const mysql = require('mysql');
 const config = require('./src/config.js')
@@ -121,6 +123,6 @@ app.use("/graphql", verifyUser, async(req, res) => graphqlHTTP({
   }
 })(req, res)) 
 //Listen to specific post 
-app.listen(config.SERVER_PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Listening for request on port ${config.SERVER_PORT}`)
 });
