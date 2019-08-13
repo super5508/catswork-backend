@@ -35,11 +35,11 @@ const getEverythingFromTable =  (tableName) => {
   })
 }
 
-const getSelectedThingFromTable = (tableName, locationReference, locationReferenceValue) => {
+const getSelectedThingFromTable = (tableName, condition) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((error, connection) => {
       if (error) return reject(error)
-      const query = `SELECT * FROM ${tableName} WHERE ${locationReference} = ${locationReferenceValue}`
+      const query = `SELECT * FROM ${tableName} WHERE ${condition}`
       console.log(`Query:`,query)
       connection.query(query, (err, response) => {
         connection.destroy()

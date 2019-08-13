@@ -42,14 +42,14 @@ const userAuthenticationType = new GraphQLObjectType({
       resolve: async (parent, args, request) => {
         //TODO: Error Handling
         console.log(`Parent User Id:`, parent[0].userId) //Since ID is going to be same everywhere
-        const userData = await getSelectedThingFromTable('CatsWork_personal', `userId`, `${parent[0].userId}`)
+        const userData = await getSelectedThingFromTable('CatsWork_personal', `userId = ${parent[0].userId}`)
         return userData[0]
       }
     },
     userDashboard: { // Since user can have multiple list of enteries, using list
       type: new GraphQLList(require('./catworksDashboard').userDashboardType), 
       resolve: async (parent, args, request) => {
-        const userData = await getSelectedThingFromTable('CatsWork_dashboard', `userId`,  `${parent.userId}`)
+        const userData = await getSelectedThingFromTable('CatsWork_dashboard', `userId = ${parent.userId}`)
         return userData
       }
     }

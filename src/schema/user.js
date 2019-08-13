@@ -29,9 +29,7 @@ const RootQuery = new GraphQLObjectType({
           type: userPersonalType, 
           resolve: async (parent, args, context) => {
             const userId = context.res.locals.userId
-            //TODO: Error Handling
-            const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId`,  `${userId}`)
-            // since there would only be a single user with a userId, hence we aren't using list here and hence we are passing the 0th element
+            const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId = ${userId}`)
             return getUserDataFromTable[0]
           }
       }, 
@@ -40,7 +38,7 @@ const RootQuery = new GraphQLObjectType({
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
           // THis is a list, hence don't need to pass the 0th element
-          const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `userId`, `${userId}`)
+          const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `userId = ${userId}`)
           return userDashboardData
         }
       },
@@ -53,9 +51,7 @@ const RootQuery = new GraphQLObjectType({
         },
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
-          // THis is a list, hence don't need to pass the 0th element
-          console.log(`personId,`, args.id)
-          const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `personId`, `${args.id}`)
+          const userDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `personId = ${args.id}`)
           console.log(`Single User Dashboard Data`, userDashboardData)
           return userDashboardData[0]
         }
@@ -64,7 +60,7 @@ const RootQuery = new GraphQLObjectType({
         type: userAuthenticationType,
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
-          const userAuthenticationData = await getSelectedThingFromTable('CatsWork_authentication', `userId`, `${userId}`)
+          const userAuthenticationData = await getSelectedThingFromTable('CatsWork_authentication', `userId  = ${userId}`)
           return userAuthenticationData[0]
         }
       },
@@ -72,7 +68,7 @@ const RootQuery = new GraphQLObjectType({
         type:new GraphQLList (userActivityType),
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
-          const userActivityData = await getSelectedThingFromTable('catworks_activity', `userId`, `${userId}`)
+          const userActivityData = await getSelectedThingFromTable('catworks_activity', `userId = ${userId}`)
           return userActivityData
         }
       },
@@ -80,9 +76,7 @@ const RootQuery = new GraphQLObjectType({
         type:new GraphQLList(userNotificationsType),
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
-          console.log(`This is userId:`, userId)
-          const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId`, `${userId}`)
-          console.log(`this is notificaiton:`, userNotificationData)
+          const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId = ${userId}`)
           return userNotificationData
         }
       }
@@ -180,7 +174,7 @@ const Mutations = new GraphQLObjectType({
       }, 
       resolve: async (parent, args, context) => {
         const userId = context.res.locals.userId
-        const checkIfUserInformationExsist = await getSelectedThingFromTable('CatsWork_personal', 'userId', `${userId}`)
+        const checkIfUserInformationExsist = await getSelectedThingFromTable('CatsWork_personal',  `userId = ${userId}`)
         if (checkIfUserInformationExsist[0]) {
           console.log(`Nothing exsit`)
           throw new Error(errorTypesEnums.USER_INFO_EXSIST)

@@ -10,7 +10,7 @@ const { enums} = require('./../enums/commonTypes')
 
 const createRandomNumberNotInTable = async (tableName, location, randomNumberLength) => {
   const generateNumber = genrateRandomNumber(randomNumberLength)
-  const checkIfNumberExsist = await getSelectedThingFromTable(tableName, location, generateNumber)
+  const checkIfNumberExsist = await getSelectedThingFromTable(tableName, `${location} = ${generateNumber}`)
   if (checkIfNumberExsist[0]) return createRandomNumberNotInTable(tableName, location, randomNumberLength)
   else if (!checkIfNumberExsist[0]) return generateNumber
 }
@@ -20,7 +20,7 @@ const createrUser = async (email, password) => {
   const hashedPassword =  bcrypt.hashSync(password, saltRounds)
   const generateOtp = await createRandomNumberNotInTable('CatsWork_authentication', 'generated_otp', 5)
   const generateUserId = await createRandomNumberNotInTable('CatsWork_authentication','userId', 7)
-  const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
+  const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication',`email = "${email}"`)
   if (checkIfEmailExsist[0]) {
     throw new Error(ErrorTypes.EMAIL_EXISTS)
   }
@@ -37,7 +37,7 @@ const createrUser = async (email, password) => {
 
 //NOT USING
 const signInUser = async (email, passwordEntered, token) => {
-  const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
+  const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication',`email = "${email}"`)
   if (!getDataAssociatedwithEmail) {
     throw new Error(ErrorTypes.EMAIL_EXISTS)
   }
@@ -59,7 +59,7 @@ const signInUser = async (email, passwordEntered, token) => {
 
 
 const googleAuth = async (req, res, email) => {
-  const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
+  const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication',`${email} = "${email}"`)
   if (checkIfEmailExsist[0]) {
     const {userId, ActiveStep} = checkIfEmailExsist[0]
     const getNewlyGeneratedAccessToken = await generateToken({userId})
@@ -91,7 +91,7 @@ const linkedinSignUpHandler = async (userId, accessToken) => {
 
 //NOT USING
 const userOtpVerification = async (email, userOtp) => {
-    const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication','email', `"${email}"`)
+    const getDataAssociatedwithEmail = await getSelectedThingFromTable('CatsWork_authentication',`email = "${email}"`)
     if (!getDataAssociatedwithEmail) {
       throw new Error(ErrorTypes.INVALID_LOGIN)
     }

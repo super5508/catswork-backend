@@ -83,7 +83,7 @@ const userDashboardType = new GraphQLObjectType({
       type: require('./catworksNotification').userNotificationsType,
       resolve: async(parent, args, request) => {
         console.log(`This is parent`, parent)
-        const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId`, `${parent.userId}`)
+        const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId = ${parent.userId}`)
         return userNotificationData[0]
       }
     },
@@ -91,7 +91,7 @@ const userDashboardType = new GraphQLObjectType({
       type: new GraphQLList(require('./catworksActivity').userActivityType),
       resolve: async(parent, args, request) => {
         console.log(`Parent User activity`, parent)
-        const userActivityData= await getSelectedThingFromTable('catworks_activity', `userId`, `${parent.userId}`)
+        const userActivityData= await getSelectedThingFromTable('catworks_activity', `userId = ${parent.userId}`)
         return userActivityData
       }
     }

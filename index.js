@@ -30,7 +30,6 @@ const cookieParser = require('cookie-parser')
 //SQL
 const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./src/helpers/sql')
 // Checking if path access and if not creating a path for logs
-
 fs.stat(logDirectory, (err, stats) => {
   if (err) {
     console.info(`Log Directory Does not exsist, Creating directory`)
@@ -41,14 +40,12 @@ fs.stat(logDirectory, (err, stats) => {
     return 
   } 
 })
-
 // Configuring rotating logs 
 const stream = rfs("file.log", {
   size: "20M", // rotate every 10 MegaBytes written
   interval: "2d", // rotate daily
   path: logDirectory 
 })
-
 // Setting up middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -58,16 +55,13 @@ app.use(helmet())
 // TODO: Parsing cookies because frontends expect cookie, suggestion change it to the 
 app.use(cors({credentials: true, origin: 'http://localhost:8080'}))
 app.use(cookieParser())
-// app.use(express.cookieParser())
 //For tracking responsive time (in headers)
 app.use(responseTime())
-
 app.use('/auth', auth)
-
-//TODO Creating status api route because of previous backend and frontend requires it -> Not optimal 
+//TODO Creating status api route because of previous backend and frontend requires it 
 app.get('/api/status', verifyUser, async (req, res) => {
     const userId = res.locals.userId
-    const dataFromTable = await getSelectedThingFromTable('CatsWork_authentication','userId', `"${userId}"`)
+    const dataFromTable = await getSelectedThingFromTable('CatsWork_authentication',`userId = ${userId}`)
     const {email, activeStep} = dataFromTable[0]
     const payload = {
       email, 
@@ -76,46 +70,52 @@ app.get('/api/status', verifyUser, async (req, res) => {
     }
     res.status(200).json({payload})
 })
-
-
 app.use("/GraphAuth", (req, res) => graphqlHTTP({
-  schema: authSchema, //TODO: Change it authentication once it is ready
+  schema: authSchema,
   graphiql: true,
   context: {req, res},
   customFormatErrorFn: error => { 
-    console.error(error)
-    // if (error.message) {
-    const { message, status } = errorFormater(error.message)
-    // }
+    const errorFormatter = {}
+    if (error.message) {
+      const { message, status } = errorFormater(error.message)
+      errorFormater.message = message
+      errorFormater.status = status
+    } else {
+      console.error(error)
+    }
     return {
-    code: status, 
-    message: message,
+    code: errorFormater.status || 500, 
+    message: errorFormater.message || 'internal server error',
     locations: error.locations,
     stack: error.stack ? error.stack.split('\n') : [],
     path: error.path,
     }
   }
 })(req, res)) 
-
 // GraphQL setup
+// TODO: Change this endpoint to something more unique
 app.use("/graphql", verifyUser, async(req, res) => graphqlHTTP({
-  schema: userSchema, //TODO: Change it authentication once it is ready
+  schema: userSchema, 
   graphiql: true,
   context: {req, res},
   customFormatErrorFn: error => { 
-    console.error(error)
-    const { message, status } = errorFormater(error.message)
+    const errorFormatter = {}
+    if (error.message) {
+      const { message, status } = errorFormater(error.message)
+      errorFormater.message = message
+      errorFormater.status = status
+    } else {
+      console.error(error)
+    }
     return {
-    code: status, 
-    message: message,
+    code: errorFormater.status || 500, 
+    message: errorFormater.message || 'internal server error',
     locations: error.locations,
     stack: error.stack ? error.stack.split('\n') : [],
     path: error.path,
     }
   }
 })(req, res)) 
-
-
 //Listen to specific post 
 app.listen(config.SERVER_PORT, () => {
   console.log(`Listening for request on port ${config.SERVER_PORT}`)
