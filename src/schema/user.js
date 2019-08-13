@@ -134,10 +134,8 @@ const Mutations = new GraphQLObjectType({
         }
       },
       resolve: async (parent, args, context) => {
-        //Create function to delete entire row from the dashboard
         const id =  args.id
         const userId = context.res.locals.userId
-        //TODO: Include UserID as well here
         const deleteSelectedRecord = await deleteSelectedRow(`CatsWork_dashboard`, `id`,  id)
         const returnObj = {
           userId: userId,
@@ -157,6 +155,13 @@ const Mutations = new GraphQLObjectType({
         const userId = context.res.locals.userId
         const payload = {...args.parameter, userId: userId}
         const addLinkedinUser = await insertIntheTable('CatsWork_dashboard', payload)
+        const notificationPayload = {
+          userId: userId, 
+          message: `Added  ${args.parameter.first}`, 
+          personId: addLinkedinUser.insertId, 
+          type:  'ADDED_PERSON'
+        }
+        const createNotificationInTable = await insertIntheTable('CatsWork_notification', notificationPayload)
         const returnObj = {
           userId: userId,
           success: true,
@@ -215,7 +220,7 @@ const Mutations = new GraphQLObjectType({
           message: `Scheduled ${args.parameter.activity} with ${getUserDataFromTable[0].name} with ${userDashboardData[0].first}`, 
           personId: args.id, 
           activity: insertActivityInTable.insertId,
-          type: 'SCHEDULED_ACTIVITY'
+          type:  'SCHEDULED_ACTIVITY'
         }
         const createNotificationInTable = await insertIntheTable('CatsWork_notification', notificationPayload)
         const returnObj = {

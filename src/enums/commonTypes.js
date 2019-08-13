@@ -147,10 +147,11 @@ const requestSuccess = new GraphQLObjectType({
 })
 
 const EnumNotification = {
-	ADDED_PERSON: 1,
-	COMPLETED_ACTIVITY: 2,
-	SCHEDULED_ACTIVITY: 3
+	ADDED_PERSON: 'Added Person',
+	COMPLETED_ACTIVITY: 'Completed Activity',
+	SCHEDULED_ACTIVITY: 'Scheduled Activity'
 }
+
 
 
 module.exports = {

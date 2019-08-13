@@ -59,7 +59,7 @@ const signInUser = async (email, passwordEntered, token) => {
 
 
 const googleAuth = async (req, res, email) => {
-  const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication',`${email} = "${email}"`)
+  const checkIfEmailExsist = await getSelectedThingFromTable('CatsWork_authentication',`email = "${email}"`)
   if (checkIfEmailExsist[0]) {
     const {userId, ActiveStep} = checkIfEmailExsist[0]
     const getNewlyGeneratedAccessToken = await generateToken({userId})
@@ -111,16 +111,14 @@ const userOtpVerification = async (email, userOtp) => {
     }
   } 
 
-
+//TODO: Change
 const verifyUser = async (req, res, next) => {
     const token = req.cookies.userId
     console.log(token)
     if(token) {
       try {
         const tokenVerficiation = await verifyToken(token)
-        console.log(`THis is token`, tokenVerficiation)
         res.locals.userId = tokenVerficiation.userId
-        console.log(res.locals.userId)
         next()
       } catch (error) {
         return res.status(401).send(`Invalid Access token`)

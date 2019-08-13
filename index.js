@@ -62,11 +62,14 @@ app.use('/auth', auth)
 app.get('/api/status', verifyUser, async (req, res) => {
     const userId = res.locals.userId
     const dataFromTable = await getSelectedThingFromTable('CatsWork_authentication',`userId = ${userId}`)
-    const {email, activeStep} = dataFromTable[0]
+    if (!dataFromTable[0]) {
+      res.locals.userId = ''
+      return res.status(422).send('Please sign in again')
+    }
     const payload = {
-      email, 
-      activeStep, 
-      userId
+      email: dataFromTable[0].email,
+      activeStep: dataFromTable[0].activeStep, 
+      userId: userId
     }
     res.status(200).json({payload})
 })
