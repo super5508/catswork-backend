@@ -29,6 +29,9 @@ const userNotificationsType =  new GraphQLObjectType({
     type: {
       type: GraphQLString
     },
+    date: {
+      type: GraphQLString  //TODO: Not using notification date anywhere instead using createdAt everywhere
+    },
     updatedAt: {
       type: GraphQLString
     },
@@ -59,11 +62,14 @@ const userNotificationsInputType = new GraphQLInputObjectType({
     activity: {
       type: GraphQLInt
     },
+    date: {
+      type: GraphQLString
+    },
     updatedAt: {
       type: GraphQLString
     },
     createdAt: {
-      type: GraphQLString
+      type: GraphQLString //TODO: Not using notification date anywhere instead using createdAt everywhere
     }
   })
 })

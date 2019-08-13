@@ -6,7 +6,6 @@ const apiSecretKey = config.GOOGLE_CLIENT_SECRET
 const scope = 'email profile'
 const axios = require('axios')
 const { activeStep } = require('./../enums/commonTypes')
-console.log(apiKey, apiSecretKey)
 class Auth {
   constructor() {
       this.oauth2Client = new OAuth2Client(

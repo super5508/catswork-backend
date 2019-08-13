@@ -4,6 +4,7 @@ const {
   GraphQLString,
   GraphQLInt,
   GraphQLInputObjectType,
+  GraphQLBoolean
 } = graphql
 const { getSelectedThingFromTable } = require('../helpers/sql')
 
@@ -74,8 +75,26 @@ const userActivityInputType = new GraphQLInputObjectType({
   })
 })
 
+const activitySucessObj = new GraphQLObjectType({
+  name: 'activity_success', 
+  fields: () => ({
+    success: {
+      type: GraphQLBoolean
+    },
+    userId: {
+      type: GraphQLInt
+    }, 
+    id: {
+      type: GraphQLString
+    }, 
+    status: {
+      type: GraphQLInt
+    }
+  })
+})
 
 module.exports = {
   userActivityType,
-  userActivityInputType
+  userActivityInputType,
+  activitySucessObj
 }

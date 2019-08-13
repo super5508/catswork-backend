@@ -114,7 +114,6 @@ const userOtpVerification = async (email, userOtp) => {
 //TODO: Change
 const verifyUser = async (req, res, next) => {
     const token = req.cookies.userId
-    console.log(token)
     if(token) {
       try {
         const tokenVerficiation = await verifyToken(token)

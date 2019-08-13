@@ -22,7 +22,6 @@ const sendEmail = (to, subject, text) => {
     if (error) {
       throw new Error(ErrorTypes.AUTHENTICATION_OTP_MESSSGE_PROBLEM)
     } else {
-      console.log('Email sent: ' + info.response);
       return info.response
     }
   });
