@@ -27,6 +27,7 @@ const {verifyUser} = require('./src/auth/auth')
 const asyncHandler = require('express-async-handler')
 const errorFormater = require('./src/helpers/errorFixer')
 const cookieParser = require('cookie-parser')
+const config = require('./src/config')
 //SQL
 const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./src/helpers/sql')
 // Checking if path access and if not creating a path for logs
@@ -53,7 +54,7 @@ app.use(morgan("combined", { stream: stream }))
 app.use(helmet())
 // Setting cors  
 // TODO: Parsing cookies because frontends expect cookie, suggestion change it to the 
-app.use(cors({credentials: true, origin: 'http://localhost:8080'})) //TODO: Add here using config file
+app.use(cors({credentials: true, origin: config.BASE_URL})) //TODO: Add here using config file
 app.use(cookieParser())
 //For tracking responsive time (in headers)
 app.use(responseTime())

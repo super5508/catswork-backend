@@ -5,7 +5,6 @@ console.log(path.resolve(__dirname, `./../${process.env.NODE_ENV}.env`))
 console.log(process.env.DB_HOST)
 const config = {
 SERVER_PORT: process.env.PORT ? parseInt(process.env.PORT) : 7007,
-BASE_URL: process.env.BASE_URL || "",
 //DB Config
 DB_HOST: process.env.DB_HOST || 'localhost',
 DB_USER: process.env.DB_USER || 'root',
@@ -20,7 +19,7 @@ NODE_EMAILER_SERVICE: process.env.NODE_EMAILER_SERVICE || 'gmail',
 NODE_EMAILER_EMAIL: process.env.NODE_EMAILER_EMAIL || 'NODE_EMAILER_EMAIL',
 NODE_EMAILER_PASSWORD: process.env.NODE_EMAILER_PASSWORD || 'password',
 // Base URL 
-BASE_URL: `http://localhost:${process.env.PORT ? parseInt(process.env.PORT) : 7007}/`,
+BASE_URL: `http://${process.env.BASE_URL}/`,
 BASE_CLIENT_URL: process.env.BASE_CLIENT_URL || 'http://localhost:8080/', 
 //GOOGLE CLIENT API 
 GOOGLE_CLIENT_API_KEY: process.env.GOOGLE_CLIENT_ID || '',
