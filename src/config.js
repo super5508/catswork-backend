@@ -1,6 +1,8 @@
-const dotenv = require("dotenv");
-dotenv.config();
-
+const dotenv = require("dotenv")
+const path = require('path')
+dotenv.config({ path: path.resolve(__dirname, `./../${process.env.NODE_ENV}.env`)});
+console.log(path.resolve(__dirname, `./../${process.env.NODE_ENV}.env`))
+console.log(process.env.DB_HOST)
 const config = {
 SERVER_PORT: process.env.PORT ? parseInt(process.env.PORT) : 7007,
 BASE_URL: process.env.BASE_URL || "",

@@ -6,8 +6,6 @@ const graphqlHTTP = require("express-graphql")
 const userSchema = require('./src/schema/user')
 const authSchema = require('./src/schema/auth')
 //routes 
-const dotenv = require("dotenv");
-dotenv.config();
 const auth = require('./src/routes/auth')
 const mysql = require('mysql');
 const config = require('./src/config.js')
@@ -55,7 +53,7 @@ app.use(morgan("combined", { stream: stream }))
 app.use(helmet())
 // Setting cors  
 // TODO: Parsing cookies because frontends expect cookie, suggestion change it to the 
-app.use(cors({credentials: true, origin: 'http://localhost:8080'}))
+app.use(cors({credentials: true, origin: 'http://localhost:8080'})) //TODO: Add here using config file
 app.use(cookieParser())
 //For tracking responsive time (in headers)
 app.use(responseTime())
@@ -123,6 +121,6 @@ app.use("/graphql", verifyUser, async(req, res) => graphqlHTTP({
   }
 })(req, res)) 
 //Listen to specific post 
-app.listen(process.env.PORT, () => {
+app.listen(config.SERVER_PORT, () => {
   console.log(`Listening for request on port ${config.SERVER_PORT}`)
 });
