@@ -27,7 +27,7 @@ const {verifyUser} = require('./src/auth/auth')
 const asyncHandler = require('express-async-handler')
 const errorFormater = require('./src/helpers/errorFixer')
 const cookieParser = require('cookie-parser')
-const config = require('./src/config')
+
 //SQL
 const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./src/helpers/sql')
 // Checking if path access and if not creating a path for logs
