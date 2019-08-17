@@ -1,6 +1,6 @@
 const { OAuth2Client } = require('google-auth-library');
 const config = require('../config')
-const redirect_uri = config.BASE_URL + 'auth/google/callback'
+const redirect_uri = config.GOOGLE_REDIRECT_URL
 const apiKey = config.GOOGLE_CLIENT_API_KEY
 const apiSecretKey = config.GOOGLE_CLIENT_SECRET
 const scope = 'email profile'
