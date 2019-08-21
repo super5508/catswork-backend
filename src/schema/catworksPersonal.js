@@ -61,6 +61,20 @@ const {
         const userData = await getSelectedThingFromTable('CatsWork_dashboard', `userId = ${parent.userId}`)
         return userData
       }
+    },
+    userNotification: {
+      type: new GraphQLList(require('./catworksNotification').userNotificationsType),
+      resolve: async(parent, args, request) => {
+        const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId = ${parent.userId}`)
+        return userNotificationData
+      }
+    },
+    userActivity: {
+      type: new GraphQLList(require('./catworksActivity').userActivityType),
+      resolve: async(parent, args, request) => {
+        const userActivityData= await getSelectedThingFromTable('catworks_activity', `userId = ${parent.userId}`)
+        return userActivityData
+      }
     }
   })
 })

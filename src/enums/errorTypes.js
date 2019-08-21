@@ -11,7 +11,8 @@ const ErrorTypes = {
   AUTHENTICATION_OTP_MESSSGE_PROBLEM: '500/unable-to-send-authentication-message',
   SQL_ERROR: `500/problem-crating-new-user`, 
   INCORRECT_OTP: '400/Incorrect-otp-entered',
-  USER_INFO_EXSIST: '422/user-info-already-exsist' // Can't add new user, edit user
+  USER_INFO_EXSIST: '422/user-info-already-exsist',
+  MISSING_PARAMETER: `422/missing-parameter` // Can't add new user, edit user
 }
 
 module.exports = ErrorTypes

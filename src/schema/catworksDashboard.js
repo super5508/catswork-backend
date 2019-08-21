@@ -11,6 +11,7 @@ const {
   GraphQLList
 } = graphql
 const { getSelectedThingFromTable } = require('../helpers/sql')
+const errorTypesEnums = require('./../enums/errorTypes')
 
 const userDashboardType = new GraphQLObjectType({
   name: 'user_dashboard',
@@ -80,15 +81,18 @@ const userDashboardType = new GraphQLObjectType({
       }
     }, 
     userNotification: {
-      type: require('./catworksNotification').userNotificationsType,
+      type: new GraphQLList(require('./catworksNotification').userNotificationsType),
       resolve: async(parent, args, request) => {
         const userNotificationData = await getSelectedThingFromTable('CatsWork_notification', `userId = ${parent.userId}`)
-        return userNotificationData[0]
+        return userNotificationData
       }
     },
     userActivity: {
       type: new GraphQLList(require('./catworksActivity').userActivityType),
       resolve: async(parent, args, request) => {
+        if (!parent.personId) {
+          throw new Error(errorTypesEnums.MISSING_PARAMETER)
+        }
         const userActivityData= await getSelectedThingFromTable('catworks_activity', `userId = ${parent.userId} AND personId = ${parent.personId}`)
         return userActivityData
       }

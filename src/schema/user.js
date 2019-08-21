@@ -34,7 +34,13 @@ const RootQuery = new GraphQLObjectType({
           }
       }, 
       catWorksDashboard: {
+        //Make Parent ID optional here
         type:  new GraphQLList(userDashboardType),
+        args: {
+          parentId: {
+            type: GraphQLInt
+          }
+        },
         resolve: async (parent, args, context) => {
           const userId = context.res.locals.userId
           // THis is a list, hence don't need to pass the 0th element
@@ -267,6 +273,7 @@ const Mutations = new GraphQLObjectType({
           status: userActivityData[0].status === 0 ? enums.activityStatus.true : enums.activityStatus.false
         }
         // User Data From Table
+        //TODO: Run them parallely instead of asynchronously -> Promise All
         const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId = ${userId}`)
         const getUserDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `personId = ${userActivityData[0].personId}`)
         const activity = payload.status === 0? 'Marked Incomplete' : 'Marked Complete'
@@ -300,6 +307,7 @@ const Mutations = new GraphQLObjectType({
         const id =  args.id
         const userId = context.res.locals.userId
         //TODO: Include UserID as well here
+        //TODO: Create Axtivity on Delete 
         const deleteSelectedRecord = await deleteSelectedRow(`catworks_activity`, `activityId`,  id)
         const returnObj = {
           userId: userId,

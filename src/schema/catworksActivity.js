@@ -22,7 +22,7 @@ const userActivityType =  new GraphQLObjectType({
       type: GraphQLString
     },
     activity: {
-      type: GraphQLString //TODO Frontend wants it to be string, given db have it as integer
+      type: GraphQLString //TODO Frontend wants it to be string, previous db have it as integer
     },
     status: {
       type: GraphQLInt
@@ -58,7 +58,7 @@ const userActivityInputType = new GraphQLInputObjectType({
       type: GraphQLString
     },
     activity: {
-      type: GraphQLString  //TODO Frontend wants it to be string, given db have it as integer
+      type: GraphQLString  //TODO Frontend wants it to be string, previous db have it as integer
     },
     status: {
       type: GraphQLInt
