@@ -54,7 +54,7 @@ app.use(morgan("combined", { stream: stream }))
 app.use(helmet())
 // Setting cors  
 // TODO: Parsing cookies because frontends expect cookie, suggestion change it to the 
-app.use(cors({credentials: true, origin: config.BASE_URL})) //TODO: Add here using config file
+app.use(cors({credentials: true, origin: config.BASE_CLIENT_URL})) //TODO: Add here using config file
 app.use(cookieParser())
 //For tracking responsive time (in headers)
 app.use(responseTime())

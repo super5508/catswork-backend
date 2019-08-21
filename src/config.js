@@ -3,6 +3,7 @@ const path = require('path')
 dotenv.config({ path: path.resolve(__dirname, `./../${process.env.NODE_ENV}.env`)});
 
 const config = {
+CURRENT_ENV: process.env.NODE_ENV,
 SERVER_PORT: process.env.PORT ? parseInt(process.env.PORT) : 7007,
 //DB Config
 DB_HOST: process.env.DB_HOST || 'localhost',
