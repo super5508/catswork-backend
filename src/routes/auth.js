@@ -72,6 +72,12 @@ router.get('/linkedin/callback', verifyUser, async (req, res) => {
   res.redirect(config.BASE_CLIENT_URL)
 })
 
+router.get('/logout', verifyUser, async (req, res) => {
+  res.clearCookie('userId')
+  res.locals = {}
+  res.redirect(config.BASE_CLIENT_URL)
+})
+
 // NOTE: Not using 
 module.exports = router
 
