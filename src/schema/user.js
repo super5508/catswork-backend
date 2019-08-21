@@ -266,13 +266,24 @@ const Mutations = new GraphQLObjectType({
         const payload = {
           status: userActivityData[0].status === 0 ? enums.activityStatus.true : enums.activityStatus.false
         }
-        console.log(`This is payload:`, payload)
+        // User Data From Table
+        const getUserDataFromTable = await getSelectedThingFromTable('CatsWork_personal', `userId = ${userId}`)
+        const getUserDashboardData = await getSelectedThingFromTable('CatsWork_dashboard', `personId = ${userActivityData[0].personId}`)
+        const activity = payload.status === 0? 'Marked Incomplete' : 'Marked Complete'
         const updateActivityInTable = await updateFieldInTable('catworks_activity', payload, `activityId = ${args.id} AND userId = ${userId}`)
+        userActivityData[0].activity = userActivityData[0].activity.toLowerCase().split('_').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ')
+        const notificationPayload = {
+          userId: userId, 
+          message: `${activity} ${userActivityData[0].activity} with ${getUserDataFromTable[0].name} with ${getUserDashboardData[0].first}`, 
+          personId: userActivityData[0].personId, 
+          activity: args.id,
+          type:  payload.status === 0 ? 'SCHEDULED_ACTIVITY' : 'COMPLETED_ACTIVITY'
+        }
+        const createNotificationInTable = await insertIntheTable('CatsWork_notification', notificationPayload)
         const returnObj = {
           userId: userId,
           success: true,
-          id: updateActivityInTable.insertId,
-          status: payload.status
+          id: args.id,
         }
         return returnObj
       }
