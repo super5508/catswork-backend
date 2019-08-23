@@ -1,33 +1,65 @@
 ## Getting Started with the project 
 
+#### Dev Environment 
 ```
 npm install
+npm run dev
 ```
+
+#### Prod Environment 
+
+```
+npm install 
+npm run prod
+```
+
 
 ## Environment Configuration 
 
-1. Create your own environment file (.env), we are using dotenv
-2. Environment file configuration values can be found by reading config.js file
+The environment contains two environment, Dev environment and Prod environment. 
 
-Typical Environment file would look something like this 
+So if dev.env file aren't present snd prod.env file are present, then create those files. 
+
+The values inside those dev file can be figured out by going through the `config.js` file in the backend. Anyway, Typical values for dev would look like 
 
 ```
-PORT = 7000
+PORT = 8080
 
 DB_HOST = localhost
 DB_USER = root
 DB_PASSWORD = rohit123
 DB_DATABASE = VPARK
-
+# rohit123
+# localhost
+# root
 JWT_ISSUER = VPARK
 JWT_SECRET = VPARK
-
+BASE_URL = http://localhost:8080/
 JWT_SESSION_DURATION = 7d
 
 NODE_EMAILER_SERVICE = gmail
 NODE_EMAILER_EMAIL = irohitbhatia@gmail.com
-NODE_EMAILER_PASSWORD = xxxx
+NODE_EMAILER_PASSWORD =xxxx
+
+GOOGLE_CALLBACK_URL = http://localhost:8080/auth/google/callback
+GOOGLE_CLIENT_ID = 683425020415-vugb5cr3cl7r9lshrspnsbimds5cr92l.apps.googleusercontent.com
+GOOGLE_CLIENT_ID_SECRET = OxFreb8e3cH6n9gu0xiB92jd
+BASE_CLIENT_URL = http://localhost:8081
+
+LINKEDIN_CLIENT_ID = 86qpua8sx6luq3
+LINKEDIN_CLIENT_SECRET = TYgTxyIUSd3LXZwv
 ```
+
+If you look at the package.json file, there are 2 important  scripts 
+
+```
+    "prod": "pm2 stop all && NODE_ENV=prod  pm2 start index.js",
+    "dev": "NODE_ENV=dev nodemon index.js"
+```
+
+running npm run dev will set the environment to dev (as visinle from the above scripts) 
+
+
 
 ## Error Handling
 
@@ -60,6 +92,8 @@ module.exports = ErrorTypes
 #### Registrating User Sample Query 
 
 Almost all the auth Queries return three things 
+
+### Note: Queries Written below are outdated, View it to get a rough idea of how the backend is structured and how to write Queries using GraphQL 
 
 Where 
 ```
