@@ -16,9 +16,19 @@ npm run prod
 
 ## Environment Configuration 
 
+If you look at the package.json file, there are 2 important  scripts 
+
+```
+    "prod": "pm2 stop all && NODE_ENV=prod  pm2 start index.js",
+    "dev": "NODE_ENV=dev nodemon index.js"
+```
+
+running npm run dev will set the environment to dev (as visinle from the above scripts) 
+
+
 The environment contains two environment, Dev environment and Prod environment. 
 
-So if dev.env file aren't present snd prod.env file are present, then create those files. 
+So if dev.env file aren't present or prod.env file aren't present, then you would need to create those files. 
 
 The values inside those dev file can be figured out by going through the `config.js` file in the backend. Anyway, Typical values for dev would look like 
 
@@ -49,15 +59,6 @@ BASE_CLIENT_URL = http://localhost:8081
 LINKEDIN_CLIENT_ID = 86qpua8sx6luq3
 LINKEDIN_CLIENT_SECRET = TYgTxyIUSd3LXZwv
 ```
-
-If you look at the package.json file, there are 2 important  scripts 
-
-```
-    "prod": "pm2 stop all && NODE_ENV=prod  pm2 start index.js",
-    "dev": "NODE_ENV=dev nodemon index.js"
-```
-
-running npm run dev will set the environment to dev (as visinle from the above scripts) 
 
 
 
