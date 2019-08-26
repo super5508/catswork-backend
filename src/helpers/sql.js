@@ -88,7 +88,6 @@ const updateFieldInTable = (tableName, updatedQuery, condition) => {
       if (error) return reject(error)
       if (updatedQuery) updatedQuery = setValuesForMutation(updatedQuery)  
       const query = `UPDATE ${tableName} SET ${updatedQuery} WHERE ${condition}`
-      console.log(query)
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
