@@ -56,6 +56,7 @@ const insertIntheTable = (tableName, insertionValues) => {
       if (error) return reject(error)
       if (insertionValues)  insertionValues = setValuesForInsertion(insertionValues)
       const query = `INSERT INTO ${tableName} ${insertionValues}`
+      console.log(query)
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -88,6 +89,7 @@ const updateFieldInTable = (tableName, updatedQuery, condition) => {
       if (error) return reject(error)
       if (updatedQuery) updatedQuery = setValuesForMutation(updatedQuery)  
       const query = `UPDATE ${tableName} SET ${updatedQuery} WHERE ${condition}`
+      console.log(query)
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -128,9 +130,9 @@ const setValuesForMutation = (valuePassed) => {
     for (x in valuePassed) {
       const key =  x.trim()
       if (!readOnlyValues[key]) {
-        let value = null
-        if (typeof valuePassed[x] === "string") value = valuePassed[x]
-        newQuery = newQuery + x + '=' + `'${valuePassed[x]}'` + ','
+        let value = valuePassed[x]
+        if (typeof value === "string") value = `'${value}'`
+         newQuery = newQuery + x + '=' + value + ','
       }
     }
     newQuery = newQuery.slice(0, -1)
