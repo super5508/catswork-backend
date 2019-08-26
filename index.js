@@ -43,7 +43,7 @@ fs.stat(logDirectory, (err, stats) => {
 })
 // Configuring rotating logs 
 const stream = rfs("file.log", {
-  size: "20M", // rotate every 10 MegaBytes written
+  size: "20M", // rotate every 20 MegaBytes written
   interval: "2d", // rotate daily
   path: logDirectory 
 })
