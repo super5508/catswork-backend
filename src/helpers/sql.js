@@ -88,6 +88,7 @@ const updateFieldInTable = (tableName, updatedQuery, condition) => {
       if (error) return reject(error)
       if (updatedQuery) updatedQuery = setValuesForMutation(updatedQuery)  
       const query = `UPDATE ${tableName} SET ${updatedQuery} WHERE ${condition}`
+      console.log(query)
       connection.query(query, (err, response) => {
         connection.destroy()
         if (err) return reject(err)
@@ -130,7 +131,7 @@ const setValuesForMutation = (valuePassed) => {
       if (!readOnlyValues[key]) {
         let value = null
         if (typeof valuePassed[x] === "string") value = valuePassed[x]
-        newQuery = newQuery + x + '=' + valuePassed[x] + ','
+        newQuery = newQuery + x + '=' + `'${valuePassed[x]}'` + ','
       }
     }
     newQuery = newQuery.slice(0, -1)
