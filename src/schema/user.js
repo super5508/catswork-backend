@@ -104,7 +104,8 @@ const Mutations = new GraphQLObjectType({
       }, 
       resolve: async (parent, args, context) => {
         const userId = context.res.locals.userId
-        const updateDashBoardInformation = await updateFieldInTable(`CatsWork_dashboard`, args.parameter, `id = ${args.id} AND userId = ${userId}`)
+        console.log(args.parameter)
+        const updateDashBoardInformation = await updateFieldInTable(`CatsWork_dashboard`, args.parameter, `personId = ${args.id} AND userId = ${userId}`)
         const returnObj = {
           userId: userId,
           success: true,

@@ -103,6 +103,9 @@ const userDashboardType = new GraphQLObjectType({
 const userDashboardInputType =  new GraphQLInputObjectType({
   name: 'userDashboadInputType', 
   fields: () => ({
+    name: {
+      type: GraphQLString
+    },
     personId: {
       type: GraphQLInt
     },
