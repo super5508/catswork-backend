@@ -142,7 +142,7 @@ const Mutations = new GraphQLObjectType({
       resolve: async (parent, args, context) => {
         const id =  args.id
         const userId = context.res.locals.userId
-        const deleteSelectedRecord = await deleteSelectedRow(`CatsWork_dashboard`, `id`,  id)
+        const deleteSelectedRecord = await deleteSelectedRow(`CatsWork_dashboard`, `personId`,  id)
         const returnObj = {
           userId: userId,
           success: true

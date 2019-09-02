@@ -122,11 +122,10 @@ const setValuesForInsertion = (valuePassed) => {
 }
 
 
-
 // Clenaing object for update
 const setValuesForMutation = (valuePassed) => {
   let newQuery = ""
-  if (typeof valuePassed === 'object') {
+  if (typeof valuePassed === 'object') { 
     for (x in valuePassed) {
       if (valuePassed[x]) {
       const key =  x.trim()
