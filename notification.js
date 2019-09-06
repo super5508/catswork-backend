@@ -9,10 +9,6 @@ webpush.setVapidDetails(
   config.PRIVATE_VAPID_KEY
 );
 
-const checkEvents = setInterval(() => {
-
-}, 1000);
-
 async function sendNotification(req, res) {
   // Get pushSubscription object
   const { subscription, userId } = req.body;
