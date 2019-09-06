@@ -27,6 +27,7 @@ const {verifyUser} = require('./src/auth/auth')
 const asyncHandler = require('express-async-handler')
 const errorFormater = require('./src/helpers/errorFixer')
 const cookieParser = require('cookie-parser')
+const notification = require('./notification');
 
 //SQL
 const { insertIntheTable, getSelectedThingFromTable, updateFieldInTable  } = require('./src/helpers/sql')
@@ -74,6 +75,9 @@ app.get('/api/status', verifyUser, async (req, res) => {
     }
     res.status(200).json({payload})
 })
+
+app.post('/subscribe', notification);
+
 app.use("/GraphAuth", (req, res) => graphqlHTTP({
   schema: authSchema,
   graphiql: true,
