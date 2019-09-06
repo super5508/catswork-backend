@@ -152,6 +152,15 @@ const EnumNotification = {
 	COMPLETED_ACTIVITY: 'Completed Activity',
 	SCHEDULED_ACTIVITY: 'Scheduled Activity'
 }
+const EnumActivity = {
+  COLD_EMAIL: 'Cold email',
+	EMAIL_FOLLOW_UP: 'Email follow-up',
+	PHONE_CALL: 'Phone call',
+	COFFEE_CHAT: 'Coffee chat',
+	RE_CONNECT: 'Re-connect',
+	ASK_FOR_REFERRAL: 'Asked for referral',
+	OTHER: 'Other'
+}
 const activityStatus = {
   true: 1,
   false: 0
@@ -167,5 +176,5 @@ module.exports = {
   },
   requestSuccess,
   EnumNotification,
-
+  EnumActivity,
 }
