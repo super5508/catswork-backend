@@ -1,5 +1,7 @@
 ## Getting Started with the project 
 
+
+
 #### Dev Environment 
 ```
 npm install
@@ -8,10 +10,37 @@ npm run dev
 
 #### Prod Environment 
 
-```
-npm install 
-npm run prod
-```
+
+#### Pushing it in the production
+
+If you are running pm2 for the first time, just paste this in the terminal 
+
+```NODE_ENV=prod  pm2 start index.js```
+
+for other time just do 
+
+```npm run prod``` 
+
+ `npm run prod` have ```pm2 stop all``` script, Since for the first time pm2 isn't working, it will throw an error. 
+
+#### Creating an api endpoint in Nginx 
+
+1. Navigate to the very root ( intentionally listing the folder's here so that you can check if you are on the correct path) 
+
+<img width="1440" alt="Screenshot 2019-09-16 at 1 21 25 PM" src="https://user-images.githubusercontent.com/32276134/64942311-5a142e00-d886-11e9-8061-df3299f38fc9.png">
+
+<img width="1440" alt="Screenshot 2019-09-16 at 1 22 43 PM" src="https://user-images.githubusercontent.com/32276134/64942377-80d26480-d886-11e9-819e-8475a86c893d.png">
+
+
+<img width="1440" alt="Screenshot 2019-09-16 at 1 22 50 PM" src="https://user-images.githubusercontent.com/32276134/64942387-8a5bcc80-d886-11e9-9086-d6940755fb22.png">
+
+2. Notice the pattern and see the way all the other api is added in the file 
+
+<img width="1440" alt="Screenshot 2019-09-16 at 1 22 56 PM" src="https://user-images.githubusercontent.com/32276134/64942453-b7a87a80-d886-11e9-854f-76337d3e7abf.png">
+
+3. Create the endpoint in a simlar fashion (best is to copy, paste it) and change the endpoint here 
+
+4. Restart the nginx and pm2 (though pm2 isn't mandatory) and everything should work 
 
 
 ## Environment Configuration 
