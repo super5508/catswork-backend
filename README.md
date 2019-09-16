@@ -8,6 +8,8 @@ npm install
 npm run dev
 ```
 
+<strong> Note: </strong> Check the enviornment configuration, You would need to create a SQL Db and then change environment configuration accordingly. 
+ 
 #### Prod Environment 
 
 
@@ -21,7 +23,9 @@ for other time just do
 
 ```npm run prod``` 
 
- `npm run prod` have ```pm2 stop all``` script, Since for the first time pm2 isn't working, it will throw an error. 
+ `npm run prod` have ```pm2 stop all``` script, Since for the first time pm2 isn't working, it will throw an error.
+ 
+ <strong> Note: </strong> If you are running production environment locally, you would need to add your iPv4 in cloud SQL in order to make connection. 
 
 #### Creating an api endpoint in Nginx 
 
