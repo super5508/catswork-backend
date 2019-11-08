@@ -30,7 +30,7 @@
     "nodemailer": "^6.3.0",
     "response-time": "^2.3.2",
     "rotating-file-stream": "^1.4.3",
-    "sequelize": "^5.12.1",
+    "sequelize": "^5.15.1",
     "util": "^0.12.1",
     "web-push": "^3.3.5"
   },
